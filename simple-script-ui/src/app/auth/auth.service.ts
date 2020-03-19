@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { IUser } from '../user.model';
 
@@ -18,7 +19,7 @@ const apiUrl = 'http://localhost:3000/api/auth';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   registerUser(user: IUser) {
     return this.http.post<any>(`${apiUrl}/signup`, user);
@@ -34,5 +35,11 @@ export class AuthService {
 
   getToken() {
     return localStorage.getItem('token');
+  }
+
+  logoutUser() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('is-admin');
+    this.router.navigate(['/login']);
   }
 }
