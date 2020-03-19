@@ -55,6 +55,31 @@ const verifyScript = async script => {
   return !isInvalid;
 };
 
+const executeScript = async scriptStr => {
+  const output = [];
+  const lines = scriptStr.split('\n');
+
+  lines.forEach(line => {
+    if (line.length === 1) {
+      const err = 'Random Error';
+      throw err;
+    }
+
+    if (line.startsWith('DoThis')) {
+      output.push(line.length);
+    } else if (line.startsWith('DoThat')) {
+      output.push(line.substring(line.length - 4));
+    } else if (line.startsWith('DoTheOther')) {
+      output.push(line.substring(line.length % 2));
+    } else {
+      const err = 'Not Valid';
+      throw err;
+    }
+  });
+
+  return output;
+};
+
 export const createScript = async (req, res) => {
   const { operations } = req.body;
   const { email } = res.locals.user;
@@ -134,4 +159,20 @@ export const deleteScript = async (req, res) => {
     };
     throw err;
   }
+};
+
+export const updateScriptOutput = async (req, res) => {
+  const { script } = req;
+  const { email } = res.locals.user;
+  const scriptOutput = await executeScript(script.script);
+  const scriptWithUpdatedOutput = {
+    ...script,
+    runResults: scriptOutput,
+  };
+  const updatedScript = await saveScript(email, scriptWithUpdatedOutput);
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data: updatedScript,
+  });
 };
