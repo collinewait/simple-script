@@ -1,1 +1,25 @@
-<p>script-details works!</p>
+<div class="example-container mat-elevation-z8">
+  <h2>Script Details</h2>
+  <div class="example-loading-shade"
+       *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+  <div class="button-row">
+    <a mat-flat-button color="primary" [routerLink]="['/scripts']"><mat-icon>list</mat-icon></a>
+  </div>
+  <mat-card class="example-card">
+    <mat-card-content>
+      <dl>
+        <dt>Id:</dt>
+        <dd>{{script.id}}</dd>
+        <dt>Script:</dt>
+        <dd>{{script.script}}</dd>
+        <dt>Output:</dt>
+        <dd>{{script.runResults}}</dd>
+      </dl>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-flat-button color="primary" [routerLink]="['/edit-scrips', script.id]"><mat-icon>edit</mat-icon>Script</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

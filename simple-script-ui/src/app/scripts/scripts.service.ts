@@ -20,4 +20,9 @@ export class ScriptsService {
   createScript(script) {
     return this.http.post<any>(apiUrl, script);
   }
+
+  getScriptById(scriptId: string) {
+    const url = `${apiUrl}/${scriptId}`;
+    return this.http.get<any>(url);
+  }
 }

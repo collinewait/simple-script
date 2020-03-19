@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { ScriptsService } from '../scripts.service';
 
 @Component({
   selector: 'app-script-details',
@@ -6,10 +9,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./script-details.component.scss']
 })
 export class ScriptDetailsComponent implements OnInit {
+  script = { id: '', script: '', runResults: '', updated: null };
+  isLoadingResults = false;
 
-  constructor() { }
+  constructor(
+    private scpt: ScriptsService,
+    private route: ActivatedRoute) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+      this.getScriptDetails(this.route.snapshot.params.id);
+    }
+
+    getScriptDetails(id: string) {
+      this.scpt.getScriptById(id)
+        .subscribe((res: any) => {
+          this.script = res.data;
+          console.log(this.script);
+          this.isLoadingResults = false;
+        }, (err) => {
+          console.log(err);
+          this.isLoadingResults = false;
+        });
+    }
 
 }
