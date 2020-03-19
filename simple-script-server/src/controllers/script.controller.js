@@ -42,6 +42,15 @@ const generateScript = async operations => {
   return script;
 };
 
+const verifyScript = async script => {
+  if (!script || !script.length) {
+    return false;
+  }
+  const lines = script.split('\n');
+  const isInvalid = lines.some(line => !(line in validOperations));
+  return !isInvalid;
+};
+
 export const createScript = async (req, res) => {
   const { operations } = req.body;
   const { email } = res.locals.user;
@@ -85,4 +94,25 @@ export const getSingleScript = async (req, res) => {
     status: 200,
     data,
   });
+};
+
+export const updateScript = async (req, res) => {
+  const isValid = await verifyScript(req.body.script);
+  if (isValid) {
+    const { script } = req;
+    const { email } = res.locals.user;
+    const newUpdate = {
+      ...script,
+      script: req.body.script,
+    };
+    script.script = req.body.script;
+    const updatedScript = await saveScript(email, newUpdate);
+    res.status(200).json({
+      message: 'success',
+      status: 200,
+      data: updatedScript,
+    });
+  } else {
+    throw invalidOps;
+  }
 };
