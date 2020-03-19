@@ -24,8 +24,7 @@ export class ScriptDetailsComponent implements OnInit {
     getScriptDetails(id: string) {
       this.scpt.getScriptById(id)
         .subscribe((res: any) => {
-          this.script = res.data;
-          console.log(this.script);
+          this.script = {...res.data, script: res.data.script.replace(/\n/g, '\\n')};
           this.isLoadingResults = false;
         }, (err) => {
           console.log(err);
