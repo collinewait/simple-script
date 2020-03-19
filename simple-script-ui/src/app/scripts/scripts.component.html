@@ -6,10 +6,10 @@
   </div>
   <div class="button-row">
     <a mat-flat-button color="primary" [routerLink]="['/create-script']"><mat-icon>add</mat-icon>Scripts</a>
+    <a mat-flat-button color="accent" [routerLink]="['/users']"><mat-icon>people</mat-icon>Users</a>
   </div>
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="data" class="example-table"
-          matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
+    <table mat-table [dataSource]="data">
 
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>Id</th>
