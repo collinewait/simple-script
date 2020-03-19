@@ -13,3 +13,8 @@ export const hashPassword = async password => {
   const newPassword = await bcrypt.hash(password, salt);
   return newPassword;
 };
+
+export const validateEmail = email => {
+  const reg = /\S+@\S+\.\S+/;
+  return reg.test(email);
+};
