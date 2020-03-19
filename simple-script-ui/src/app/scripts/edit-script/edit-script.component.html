@@ -11,8 +11,14 @@
     <form [formGroup]="scriptForm" (ngSubmit)="onFormSubmit()">
       <mat-form-field class="example-full-width">
         <mat-label>Script</mat-label>
-        <input matInput placeholder="Script" formControlName="script"
-                [errorStateMatcher]="matcher">
+        <input matInput placeholder="Script e.g: DoThisThing(string)\nDoThatThing(integer"
+          formControlName="script" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="scriptForm.controls.script.errors?.required">
+            Script is required
+          </mat-error>
+          <mat-error *ngIf="scriptForm.controls.script.errors?.invalidScript && !scriptForm.controls.script.errors?.required">
+            Please enter a valid script.
+          </mat-error>
       </mat-form-field>
       <div class="button-row">
         <button type="submit" [disabled]="!scriptForm.valid" mat-flat-button color="primary"><mat-icon>save</mat-icon></button>

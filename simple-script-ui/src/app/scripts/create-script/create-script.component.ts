@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
-import { InvalidOps } from '../invalid-ops.validator';
+import { InvalidOps } from '../script.validator';
 import { MyErrorStateMatcher } from '../../common/my-error-state-matcher';
 import { ScriptsService } from '../scripts.service';
 

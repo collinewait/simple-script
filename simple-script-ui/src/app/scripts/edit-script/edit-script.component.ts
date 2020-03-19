@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { ScriptsService } from '../scripts.service';
 import { MyErrorStateMatcher } from '../../common/my-error-state-matcher';
+import { InvalidScript } from '../script.validator';
 
 @Component({
   selector: 'app-edit-script',
@@ -27,7 +28,7 @@ export class EditScriptComponent implements OnInit {
     ngOnInit(): void {
       this.getScriptById(this.route.snapshot.params.id);
       this.scriptForm = this.formBuilder.group({
-        script : [null, Validators.required]
+        script : [null, [Validators.required, InvalidScript]]
       });
     }
 
@@ -45,7 +46,6 @@ export class EditScriptComponent implements OnInit {
       const data = { script: this.scriptForm.value.script.replace(/\\n/g, '\n') };
       this.scpt.updateScript(this.id, data)
         .subscribe((res: any) => {
-            console.log('ress', res.data);
             const scriptId = res.data.id;
             this.isLoadingResults = false;
             this.router.navigate(['/script-details', scriptId]);
