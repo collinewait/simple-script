@@ -7,6 +7,14 @@ export const generateToken = async payload =>
     expiresIn: config.expiresIn,
   });
 
+export const decodeToken = async token => {
+  const data = jwt.verify(token, config.SECRET_KEY, (err, decoded) => {
+    if (err) return { error: err.message };
+    return decoded;
+  });
+  return data;
+};
+
 export const hashPassword = async password => {
   const RADIX = 10;
   const salt = await bcrypt.genSalt(parseInt(config.SALT_ROUNDS, RADIX));
