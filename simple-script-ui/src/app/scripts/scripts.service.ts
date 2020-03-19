@@ -16,4 +16,8 @@ export class ScriptsService {
   getScripts() {
     return this.http.get<any>(apiUrl);
   }
+
+  createScript(script) {
+    return this.http.post<any>(apiUrl, script);
+  }
 }

@@ -1,0 +1,29 @@
+<div class="example-container mat-elevation-z8">
+  <h2>Create a script</h2>
+  <p>Valid operations that can create a script are: DoThisThing(string), DoThatThing(integer) and DoTheOtherThing(float)</p>
+  <div class="example-loading-shade"
+        *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+  <div class="button-row">
+    <a mat-flat-button color="primary" [routerLink]="['/scripts']"><mat-icon>list</mat-icon></a>
+  </div>
+  <mat-card class="example-card">
+    <form [formGroup]="scriptForm" (ngSubmit)="onFormSubmit()">
+      <mat-form-field class="example-full-width">
+        <mat-label>Operations</mat-label>
+        <input matInput placeholder="Comma seperated operations without a comma at the end e.g: DoThisThing(string), DoThatThing(integer)"
+          formControlName="operations" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="scriptForm.controls.operations.errors?.required">
+            Operation(s) are required
+          </mat-error>
+          <mat-error *ngIf="scriptForm.controls.operations.errors?.invalidOps && !scriptForm.controls.operations.errors?.required">
+            Please enter valid operations.
+          </mat-error>
+      </mat-form-field>
+      <div class="button-row">
+        <button type="submit" [disabled]="!scriptForm.valid" mat-flat-button color="primary"><mat-icon>save</mat-icon></button>
+      </div>
+    </form>
+  </mat-card>
+</div>

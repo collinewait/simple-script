@@ -24,13 +24,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScriptsComponent } from './scripts/scripts.component';
 import { LoginComponent } from './auth/login/login.component';
 import { TokenInterceptorService } from './common/token-interceptor.service';
+import { CreateScriptComponent } from './scripts/create-script/create-script.component';
+import { ScriptDetailsComponent } from './scripts/script-details/script-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
     ScriptsComponent,
-    LoginComponent
+    LoginComponent,
+    CreateScriptComponent,
+    ScriptDetailsComponent
   ],
   imports: [
     BrowserModule,
