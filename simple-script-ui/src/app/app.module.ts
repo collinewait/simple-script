@@ -22,12 +22,14 @@ import { AppComponent } from './app.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ScriptsComponent } from './scripts/scripts.component';
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SignupComponent,
-    ScriptsComponent
+    ScriptsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

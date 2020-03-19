@@ -3,6 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { IUser } from '../user.model';
 
+interface RegData {
+  email: string;
+  password: string;
+}
+
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
@@ -17,5 +22,13 @@ export class AuthService {
 
   registerUser(user: IUser) {
     return this.http.post<any>(`${apiUrl}/signup`, user);
+  }
+
+  loginUser(user: RegData) {
+    return this.http.post<any>(`${apiUrl}/login`, user);
+  }
+
+  loggedIn() {
+    return !!localStorage.getItem('token');
   }
 }
