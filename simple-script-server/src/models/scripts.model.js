@@ -24,3 +24,12 @@ export const findOne = async (userEmail, scriptId) => {
   }
   return null;
 };
+
+export const removeScript = async (userEmail, script) => {
+  if (db.scripts[userEmail][script.id]) {
+    delete db.scripts[userEmail][script.id];
+    return { ...script };
+  }
+
+  return null;
+};

@@ -7,6 +7,7 @@ import {
   getAllScripts,
   getSingleScript,
   updateScript,
+  deleteScript,
 } from '../controllers/script.controller';
 import { findScript } from '../middlewares/script.middleware';
 
@@ -20,6 +21,7 @@ scriptRouter.use('/scripts/:scriptId', verifyUser, findScript);
 scriptRouter
   .route('/scripts/:scriptId')
   .get(asyncHandler(getSingleScript))
-  .put(asyncHandler(updateScript));
+  .put(asyncHandler(updateScript))
+  .delete(asyncHandler(deleteScript));
 
 export default scriptRouter;

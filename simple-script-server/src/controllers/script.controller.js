@@ -1,6 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { saveScript, getUserScripts } from '../models/scripts.model';
+import {
+  saveScript,
+  getUserScripts,
+  removeScript,
+} from '../models/scripts.model';
 
 const validOperations = {
   'DoThisThing(string)': 1,
@@ -114,5 +118,20 @@ export const updateScript = async (req, res) => {
     });
   } else {
     throw invalidOps;
+  }
+};
+
+export const deleteScript = async (req, res) => {
+  const { script } = req;
+  const { email } = res.locals.user;
+  const deletedScript = await removeScript(email, script);
+  if (deletedScript) {
+    res.status(204).json({});
+  } else {
+    const err = {
+      status: 500,
+      message: 'something wrong happened during deletion',
+    };
+    throw err;
   }
 };
