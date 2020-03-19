@@ -26,6 +26,9 @@
             </mat-error>
         </mat-form-field>
       </mat-card-content>
+      <mat-error *ngIf="loginInvalid">
+        Invalid email or password
+      </mat-error>
       <button mat-stroked-button color="primary" class="btn-block" [disabled]="!userData.valid">Log in</button>
     </form>
   </mat-card>

@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   email = '';
   password = '';
   isLoadingResults = false;
+  loginInvalid = false;
   matcher = new MyErrorStateMatcher();
 
   constructor(
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(['/scripts']);
       }, err => {
         this.isLoadingResults = false;
-        console.log(err);
+        this.loginInvalid = true;
       }
     );
   }
