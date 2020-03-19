@@ -24,6 +24,7 @@ export const userSignUp = async (req, res) => {
     firstName: dataValues.firstName,
     lastName: dataValues.lastName,
     email: dataValues.email,
+    isAdmin: dataValues.isAdmin,
   };
   res.status(201).json({
     message: 'success',
@@ -36,6 +37,13 @@ export const userSignUp = async (req, res) => {
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
   const user = await findOne(email);
+  const data = {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    isAdmin: user.isAdmin,
+  };
   await validateCreds(user, password);
   const payload = {
     id: user.id,
@@ -45,6 +53,7 @@ export const userLogin = async (req, res) => {
   res.status(200).send({
     message: 'Success',
     token,
+    data,
   });
 };
 
