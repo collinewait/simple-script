@@ -38,6 +38,12 @@ export const userSignUp = async (req, res) => {
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
   const user = await findOne(email);
+  await validateCreds(user, password);
+  const payload = {
+    id: user.id,
+    email,
+  };
+  const token = await generateToken(payload);
   const data = {
     id: user.id,
     firstName: user.firstName,
@@ -45,12 +51,6 @@ export const userLogin = async (req, res) => {
     email: user.email,
     isAdmin: user.isAdmin,
   };
-  await validateCreds(user, password);
-  const payload = {
-    id: user.id,
-    email,
-  };
-  const token = await generateToken(payload);
   res.status(200).send({
     message: 'Success',
     token,
