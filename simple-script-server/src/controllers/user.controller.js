@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { generateToken, hashPassword, validateCreds } from '../util/auth.utils';
-import { createUser, findOne } from '../models/user.model';
+import { createUser, findOne, findAll } from '../models/user.model';
 
 export const userSignUp = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -70,5 +70,15 @@ export const addUser = async (req, res) => {
     message: 'success',
     status: 201,
     data,
+  });
+};
+
+export const getAllUsers = async (req, res) => {
+  const { email } = res.locals.user;
+  const users = await findAll(email);
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data: users,
   });
 };

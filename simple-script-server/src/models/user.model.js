@@ -13,3 +13,7 @@ export const findOne = async userEmail => {
   return null;
 };
 
+export const findAll = async userEmail => {
+  const { [userEmail]: _, ...otherUsers } = db.users;
+  return otherUsers;
+};
