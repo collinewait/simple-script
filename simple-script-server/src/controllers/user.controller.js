@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { generateToken, hashPassword, validateCreds } from '../util/auth.utils';
 import { createUser, findOne, findAll } from '../models/user.model';
+import { getUserScripts } from '../models/scripts.model';
 
 export const userSignUp = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -117,6 +118,23 @@ export const updateUser = async (req, res) => {
     email: dataValues.email,
     isAdmin: dataValues.isAdmin,
   };
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data,
+  });
+};
+
+export const getUser = async (req, res) => {
+  const { user } = req;
+  const { userEmail } = req.params;
+
+  const userScripts = await getUserScripts(userEmail);
+  const data = {
+    ...user,
+    scripts: userScripts || {},
+  };
+
   res.status(200).json({
     message: 'success',
     status: 200,
