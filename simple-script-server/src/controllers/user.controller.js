@@ -11,6 +11,7 @@ export const userSignUp = async (req, res) => {
     lastName,
     email,
     password: newPassword,
+    isAdmin: false,
   };
   const { dataValues } = await createUser(newUser);
   const payload = {
@@ -23,6 +24,7 @@ export const userSignUp = async (req, res) => {
     firstName: dataValues.firstName,
     lastName: dataValues.lastName,
     email: dataValues.email,
+    isAdmin: dataValues.isAdmin,
   };
   res.status(201).json({
     message: 'success',
