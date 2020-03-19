@@ -82,3 +82,35 @@ export const getAllUsers = async (req, res) => {
     data: users,
   });
 };
+
+export const updateUser = async (req, res) => {
+  const { user } = req;
+  const {
+    firstName = user.firstName,
+    lastName = user.lastName,
+    password,
+    isAdmin = user.isAdmin,
+  } = req.body;
+  const newPassword = password ? await hashPassword(password) : user.password;
+  const updatedUser = {
+    ...user,
+    firstName,
+    lastName,
+    password: newPassword,
+    isAdmin,
+  };
+
+  const { dataValues } = await createUser(updatedUser);
+  const data = {
+    id: dataValues.id,
+    firstName: dataValues.firstName,
+    lastName: dataValues.lastName,
+    email: dataValues.email,
+    isAdmin: dataValues.isAdmin,
+  };
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data,
+  });
+};

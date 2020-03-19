@@ -89,3 +89,23 @@ export const verifyAdmin = async (req, res, next) => {
     });
   }
 };
+
+export const findUser = async (req, res, next) => {
+  const { userEmail } = req.params;
+  const user = await findOne(userEmail);
+  if (user) {
+    req.user = {
+      email: userEmail,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      id: user.id,
+      isAdmin: user.isAdmin,
+    };
+    next();
+  } else {
+    return res.status(400).json({
+      status: 400,
+      message: `user not found with email: ${userEmail}`,
+    });
+  }
+};
