@@ -6,9 +6,10 @@ const validateUser = async (req, res, next) => {
     const { email } = req.body;
     const user = await findOne(email);
     if (user !== null) {
-      return res.status(409).json({
-        status: 409,
-        message: ' Email exists',
+      return res.status(401).json({
+        status: 401,
+        message:
+          ' Invalid details, please check your email address or password',
       });
     }
     next();
