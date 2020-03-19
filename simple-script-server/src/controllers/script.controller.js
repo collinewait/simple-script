@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import saveScript from '../models/scripts.model';
+import { saveScript, getUserScripts } from '../models/scripts.model';
 
 const validOperations = {
   'DoThisThing(string)': 1,
@@ -42,7 +42,7 @@ const generateScript = async operations => {
   return script;
 };
 
-const createScript = async (req, res) => {
+export const createScript = async (req, res) => {
   const { operations } = req.body;
   const { email } = res.locals.user;
 
@@ -66,4 +66,13 @@ const createScript = async (req, res) => {
   }
 };
 
-export default createScript;
+export const getAllScripts = async (req, res) => {
+  const { email } = res.locals.user;
+  const scripts = await getUserScripts(email);
+  const data = scripts || {};
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data,
+  });
+};

@@ -13,4 +13,7 @@ export const saveScript = async (userEmail, script) => {
   };
 };
 
-export default saveScript;
+export const getUserScripts = async userEmail => {
+  const scripts = db.scripts[userEmail];
+  return scripts;
+};
