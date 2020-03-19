@@ -24,7 +24,6 @@ export const userSignUp = async (req, res) => {
     firstName: dataValues.firstName,
     lastName: dataValues.lastName,
     email: dataValues.email,
-    isAdmin: dataValues.isAdmin,
   };
   res.status(201).json({
     message: 'success',
@@ -46,5 +45,30 @@ export const userLogin = async (req, res) => {
   res.status(200).send({
     message: 'Success',
     token,
+  });
+};
+
+export const addUser = async (req, res) => {
+  const { firstName, lastName, email, password, isAdmin = false } = req.body;
+  const newPassword = await hashPassword(password);
+  const newUser = {
+    id: uuidv4(),
+    firstName,
+    lastName,
+    email,
+    password: newPassword,
+    isAdmin,
+  };
+  const { dataValues } = await createUser(newUser);
+  const data = {
+    id: dataValues.id,
+    firstName: dataValues.firstName,
+    lastName: dataValues.lastName,
+    email: dataValues.email,
+  };
+  res.status(201).json({
+    message: 'success',
+    status: 201,
+    data,
   });
 };

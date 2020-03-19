@@ -77,3 +77,15 @@ export const verifyUser = async (req, res, next) => {
     });
   }
 };
+
+export const verifyAdmin = async (req, res, next) => {
+  const { isAdmin } = res.locals.user;
+  if (isAdmin) {
+    next();
+  } else {
+    return res.status(403).json({
+      status: 403,
+      message: 'permission denied',
+    });
+  }
+};
