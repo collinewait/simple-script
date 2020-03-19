@@ -18,3 +18,17 @@ export const validateEmail = email => {
   const reg = /\S+@\S+\.\S+/;
   return reg.test(email);
 };
+
+export const validateCreds = async (userObj, password) => {
+  const error401 = {
+    status: 401,
+    message: 'Invalid credentials',
+  };
+  if (!userObj) {
+    throw error401;
+  }
+  const isMatch = await bcrypt.compare(password, userObj.password);
+  if (!isMatch) {
+    throw error401;
+  }
+};

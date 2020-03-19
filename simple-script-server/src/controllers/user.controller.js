@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { generateToken, hashPassword } from '../util/auth.utils';
-import { createUser } from '../models/user.model';
+import { generateToken, hashPassword, validateCreds } from '../util/auth.utils';
+import { createUser, findOne } from '../models/user.model';
 
-const userSignUp = async (req, res) => {
+export const userSignUp = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const newPassword = await hashPassword(password);
   const newUser = {
@@ -31,4 +31,18 @@ const userSignUp = async (req, res) => {
     token,
   });
 };
-export default userSignUp;
+
+export const userLogin = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await findOne(email);
+  await validateCreds(user, password);
+  const payload = {
+    id: user.id,
+    email,
+  };
+  const token = await generateToken(payload);
+  res.status(200).send({
+    message: 'Success',
+    token,
+  });
+};
