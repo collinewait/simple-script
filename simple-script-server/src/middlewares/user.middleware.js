@@ -61,11 +61,19 @@ export const verifyUser = async (req, res, next) => {
   }
   const user = await findOne(decoded.email);
 
-  res.locals.user = {
-    email: decoded.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    userId: user.id,
-  };
-  next();
+  if (user) {
+    res.locals.user = {
+      email: decoded.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userId: user.id,
+      isAdmin: user.isAdmin,
+    };
+    next();
+  } else {
+    return res.status(401).json({
+      status: 401,
+      message: 'Invalid credentials, please login',
+    });
+  }
 };
