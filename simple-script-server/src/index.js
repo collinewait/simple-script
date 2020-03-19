@@ -1,6 +1,17 @@
 import express from 'express';
+import cors from 'cors';
+
+import router from './routes';
 
 const app = express();
+
+app.use(cors());
+
+// Body parser configuration
+app.use(express.json({ extended: false }));
+
+// Router configuration
+app.use(router);
 
 app.get('/', (req, res) => {
   res.send('Hello, simple script here');
