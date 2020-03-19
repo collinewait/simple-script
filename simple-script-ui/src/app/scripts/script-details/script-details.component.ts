@@ -14,6 +14,7 @@ export class ScriptDetailsComponent implements OnInit {
 
   constructor(
     private scpt: ScriptsService,
+    private router: Router,
     private route: ActivatedRoute) { }
 
     ngOnInit(): void {
@@ -32,4 +33,16 @@ export class ScriptDetailsComponent implements OnInit {
         });
     }
 
+    deleteScript(id: any) {
+      this.isLoadingResults = true;
+      this.scpt.deleteScript(id)
+        .subscribe(res => {
+            this.isLoadingResults = false;
+            this.router.navigate(['/scripts']);
+          }, (err) => {
+            console.log(err);
+            this.isLoadingResults = false;
+          }
+        );
+      }
 }

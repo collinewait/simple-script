@@ -25,4 +25,9 @@ export class ScriptsService {
     const url = `${apiUrl}/${scriptId}`;
     return this.http.get<any>(url);
   }
+
+  deleteScript(scriptId: string) {
+    const url = `${apiUrl}/${scriptId}`;
+    return this.http.delete<any>(url, httpOptions);
+  }
 }
