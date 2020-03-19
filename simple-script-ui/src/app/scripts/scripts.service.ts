@@ -35,4 +35,9 @@ export class ScriptsService {
     const url = `${apiUrl}/${scriptId}`;
     return this.http.put(url, script, httpOptions);
   }
+
+  runScript(scriptId: string) {
+    const url = `${apiUrl}/${scriptId}`;
+    return this.http.patch(url, httpOptions);
+  }
 }

@@ -17,31 +17,48 @@ export class ScriptDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute) { }
 
-    ngOnInit(): void {
-      this.getScriptDetails(this.route.snapshot.params.id);
-    }
+  ngOnInit(): void {
+    this.getScriptDetails(this.route.snapshot.params.id);
+  }
 
-    getScriptDetails(id: string) {
-      this.scpt.getScriptById(id)
-        .subscribe((res: any) => {
-          this.script = {...res.data, script: res.data.script.replace(/\n/g, '\\n')};
+  getScriptDetails(id: string) {
+    this.scpt.getScriptById(id)
+      .subscribe((res: any) => {
+        this.script = {...res.data, script: this.escapeNewline(res.data.script)};
+        this.isLoadingResults = false;
+      }, (err) => {
+        console.log(err);
+        this.isLoadingResults = false;
+      });
+  }
+
+  deleteScript(id: any) {
+    this.isLoadingResults = true;
+    this.scpt.deleteScript(id)
+      .subscribe(res => {
           this.isLoadingResults = false;
+          this.router.navigate(['/scripts']);
         }, (err) => {
           console.log(err);
           this.isLoadingResults = false;
-        });
+        }
+      );
     }
 
-    deleteScript(id: any) {
-      this.isLoadingResults = true;
-      this.scpt.deleteScript(id)
-        .subscribe(res => {
-            this.isLoadingResults = false;
-            this.router.navigate(['/scripts']);
-          }, (err) => {
-            console.log(err);
-            this.isLoadingResults = false;
-          }
-        );
-      }
+  runScript(id: any) {
+    this.isLoadingResults = true;
+    this.scpt.runScript(id)
+      .subscribe((res: any) => {
+        this.script = {...res.data, script: this.escapeNewline(res.data.script)};
+        this.isLoadingResults = false;
+        }, (err) => {
+          console.log(err);
+          this.isLoadingResults = false;
+        }
+      );
+  }
+
+  escapeNewline(script: string) {
+    return script.replace(/\n/g, '\\n');
+  }
 }
