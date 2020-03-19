@@ -2,7 +2,12 @@ import { Router } from 'express';
 
 import asyncHandler from '../util/asyncHandler';
 import { verifyUser } from '../middlewares/user.middleware';
-import { createScript, getAllScripts } from '../controllers/script.controller';
+import {
+  createScript,
+  getAllScripts,
+  getSingleScript,
+} from '../controllers/script.controller';
+import { findScript } from '../middlewares/script.middleware';
 
 const scriptRouter = Router();
 
@@ -10,5 +15,7 @@ scriptRouter
   .route('/scripts')
   .post(verifyUser, asyncHandler(createScript))
   .get(verifyUser, asyncHandler(getAllScripts));
+scriptRouter.use('/scripts/:scriptId', verifyUser, findScript);
+scriptRouter.route('/scripts/:scriptId').get(asyncHandler(getSingleScript));
 
 export default scriptRouter;

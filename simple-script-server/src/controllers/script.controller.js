@@ -76,3 +76,13 @@ export const getAllScripts = async (req, res) => {
     data,
   });
 };
+
+export const getSingleScript = async (req, res) => {
+  const { script } = req;
+  const data = script || {};
+  res.status(200).json({
+    message: 'success',
+    status: 200,
+    data,
+  });
+};

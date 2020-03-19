@@ -17,3 +17,10 @@ export const getUserScripts = async userEmail => {
   const scripts = db.scripts[userEmail];
   return scripts;
 };
+
+export const findOne = async (userEmail, scriptId) => {
+  if (scriptId in db.scripts[userEmail]) {
+    return db.scripts[userEmail][scriptId];
+  }
+  return null;
+};
