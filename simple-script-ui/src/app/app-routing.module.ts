@@ -7,6 +7,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { CreateScriptComponent } from './scripts/create-script/create-script.component';
 import { ScriptDetailsComponent } from './scripts/script-details/script-details.component';
+import { EditScriptComponent } from './scripts/edit-script/edit-script.component';
 
 
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: 'scripts', component: ScriptsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'create-script', component: CreateScriptComponent},
-  { path: 'script-details/:id', component: ScriptDetailsComponent }
+  { path: 'script-details/:id', component: ScriptDetailsComponent },
+  { path: 'edit-script/:id', component: EditScriptComponent }
 ];
 
 @NgModule({

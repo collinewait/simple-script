@@ -30,4 +30,9 @@ export class ScriptsService {
     const url = `${apiUrl}/${scriptId}`;
     return this.http.delete<any>(url, httpOptions);
   }
+
+  updateScript(scriptId: string, script: any) {
+    const url = `${apiUrl}/${scriptId}`;
+    return this.http.put(url, script, httpOptions);
+  }
 }

@@ -26,6 +26,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { TokenInterceptorService } from './common/token-interceptor.service';
 import { CreateScriptComponent } from './scripts/create-script/create-script.component';
 import { ScriptDetailsComponent } from './scripts/script-details/script-details.component';
+import { EditScriptComponent } from './scripts/edit-script/edit-script.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ScriptDetailsComponent } from './scripts/script-details/script-details.
     ScriptsComponent,
     LoginComponent,
     CreateScriptComponent,
-    ScriptDetailsComponent
+    ScriptDetailsComponent,
+    EditScriptComponent
   ],
   imports: [
     BrowserModule,
