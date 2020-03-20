@@ -18,6 +18,7 @@ export class SignupComponent implements OnInit {
   email = '';
   password = '';
   isLoadingResults = false;
+  signupInvalid = false;
   matcher = new MyErrorStateMatcher();
 
   constructor(
@@ -44,6 +45,7 @@ export class SignupComponent implements OnInit {
         this.router.navigate(['/scripts']);
       }, err => {
         this.isLoadingResults = false;
+        this.signupInvalid = true;
         console.log(err);
       });
   }
