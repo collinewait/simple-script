@@ -15,6 +15,7 @@ import { EditUserComponent } from './users/edit-user/edit-user.component';
 
 
 const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'login' },
   { path: 'signup', component: SignupComponent },
   { path: 'scripts', component: ScriptsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
