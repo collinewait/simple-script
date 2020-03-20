@@ -1,0 +1,32 @@
+<div class="example-container mat-elevation-z8">
+  <h2>Edit User</h2>
+  <div class="example-loading-shade"
+        *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+  <div class="button-row">
+      <a mat-flat-button color="primary" (click)="userDetails()"><mat-icon>info</mat-icon></a>
+  </div>
+  <mat-card class="example-card">
+    <form [formGroup]="userData" (ngSubmit)="onFormSubmit()">
+      <mat-form-field class="example-full-width">
+        <input formControlName="firstName" matInput type="text"
+          placeholder="First name" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="userData.controls.firstName.errors?.required">
+            First name is required
+          </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width">
+        <input formControlName="lastName" matInput type="text"
+          placeholder="Last name" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="userData.controls.lastName.errors?.required">
+            Last name is required
+          </mat-error>
+      </mat-form-field>
+      <div class="button-row">
+        <button type="submit" [disabled]="!userData.valid" mat-flat-button color="primary"><mat-icon>save</mat-icon></button>
+      </div>
+    </form>
+  </mat-card>
+</div>

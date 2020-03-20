@@ -30,6 +30,7 @@ import { EditScriptComponent } from './scripts/edit-script/edit-script.component
 import { UsersComponent } from './users/users.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
+import { EditUserComponent } from './users/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { AddUserComponent } from './users/add-user/add-user.component';
     EditScriptComponent,
     UsersComponent,
     UserDetailsComponent,
-    AddUserComponent
+    AddUserComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,
