@@ -10,6 +10,7 @@ import { ScriptDetailsComponent } from './scripts/script-details/script-details.
 import { EditScriptComponent } from './scripts/edit-script/edit-script.component';
 import { UsersComponent } from './users/users.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { AddUserComponent } from './users/add-user/add-user.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'script-details/:id', component: ScriptDetailsComponent },
   { path: 'edit-script/:id', component: EditScriptComponent },
   { path: 'users', component: UsersComponent},
-  { path: 'user-details/:id', component: UserDetailsComponent}
+  { path: 'user-details/:email', component: UserDetailsComponent},
+  { path: 'add-user', component: AddUserComponent }
 ];
 
 @NgModule({

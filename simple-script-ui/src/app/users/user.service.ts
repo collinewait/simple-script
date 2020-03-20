@@ -13,4 +13,13 @@ export class UserService {
   getUsers() {
     return this.http.get<any>(apiUrl);
   }
+
+  addUser(user) {
+    return this.http.post<any>(apiUrl, user);
+  }
+
+  getUserByEmail(userEmail: string) {
+    const url = `${apiUrl}/${userEmail}`;
+    return this.http.get<any>(url);
+  }
 }

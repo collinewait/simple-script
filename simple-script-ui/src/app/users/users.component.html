@@ -6,6 +6,7 @@
   </div>
   <div class="button-row">
     <a mat-flat-button color="primary" [routerLink]="['/scripts']"><mat-icon>list</mat-icon></a>
+    <a mat-flat-button color="accent" [routerLink]="['/add-user']"><mat-icon>add</mat-icon>User</a>
   </div>
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="data"
@@ -32,7 +33,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/user-details/', row.id]"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/user-details/', row.email]"></tr>
     </table>
   </div>
 </div>
