@@ -42,4 +42,8 @@ export class AuthService {
     localStorage.removeItem('is-admin');
     this.router.navigate(['/login']);
   }
+
+  isAdmin() {
+    return localStorage.getItem('is-admin') === 'true' ? true : false;
+  }
 }
