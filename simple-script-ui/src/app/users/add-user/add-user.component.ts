@@ -36,9 +36,9 @@ export class AddUserComponent implements OnInit {
   onFormSubmit() {
     this.user.addUser(this.userData.value)
       .subscribe(res => {
-        const id = res.data.id;
+        const email = res.data.email;
         this.isLoadingResults = false;
-        this.router.navigate(['/user-details', id]);
+        this.router.navigate(['/user-details', email]);
       }, err => {
         this.isLoadingResults = false;
         console.log(err);
