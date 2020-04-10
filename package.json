@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "workspaces": {
+        "packages": [
+            "packages/*"
+          ],
+        "nohoist": [
+            "**/@angular/*",
+            "**/@angular/*/**",
+            "**/@angular-devkit/*",
+            "**/@angular-devkit/*/**"
+        ]
+    }
+}

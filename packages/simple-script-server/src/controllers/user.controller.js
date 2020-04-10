@@ -4,7 +4,9 @@ import { createUser, findOne, findAll } from '../models/user.model';
 import { getUserScripts } from '../models/scripts.model';
 
 export const userSignUp = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
+  const {
+    firstName, lastName, email, password,
+  } = req.body;
   const newPassword = await hashPassword(password);
   const newUser = {
     id: uuidv4(),
@@ -59,7 +61,9 @@ export const userLogin = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
-  const { firstName, lastName, email, password, isAdmin = false } = req.body;
+  const {
+    firstName, lastName, email, password, isAdmin = false,
+  } = req.body;
   const newPassword = await hashPassword(password);
   const newUser = {
     id: uuidv4(),

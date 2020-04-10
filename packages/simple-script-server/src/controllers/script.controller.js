@@ -130,8 +130,7 @@ export const updateScript = async (req, res) => {
   if (isValid) {
     const { script } = req;
     const { email } = res.locals.user;
-    const runResults =
-      script.script === req.body.script ? script.runResults : '';
+    const runResults = script.script === req.body.script ? script.runResults : '';
     const newUpdate = {
       ...script,
       script: req.body.script,

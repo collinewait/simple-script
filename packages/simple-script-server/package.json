@@ -1,5 +1,5 @@
 {
-  "name": "simple-script-server",
+  "name": "@simple-script/simple-script-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
