@@ -7,7 +7,7 @@ export const saveScript = async (userEmail, script) => {
     db.scripts[userEmail] = {};
     db.scripts[userEmail][script.id] = script;
   }
-  db.scripts[userEmail][script.id] = script;
+
   return {
     ...script,
   };

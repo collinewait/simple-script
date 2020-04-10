@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 
 // Body parser configuration
-app.use(express.json({ extended: false }));
+app.use(express.json());
 
 // Router configuration
 app.use(router);
