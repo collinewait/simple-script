@@ -16,9 +16,13 @@ const scriptRouter = Router();
 
 scriptRouter
   .route('/scripts')
-  .post(verifyUser, asyncHandler(createScript))
-  .get(verifyUser, asyncHandler(getAllScripts));
-scriptRouter.use('/scripts/:scriptId', verifyUser, findScript);
+  .post(asyncHandler(verifyUser), asyncHandler(createScript))
+  .get(asyncHandler(verifyUser), asyncHandler(getAllScripts));
+scriptRouter.use(
+  '/scripts/:scriptId',
+  asyncHandler(verifyUser),
+  asyncHandler(findScript),
+);
 scriptRouter
   .route('/scripts/:scriptId')
   .get(asyncHandler(getSingleScript))

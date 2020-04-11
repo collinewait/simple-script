@@ -1,19 +1,45 @@
-import db from '../db';
+import mongoose from 'mongoose';
 
-export const createUser = async user => {
-  const { email, ...userInfo } = user;
-  db.users[email] = userInfo;
-  return { dataValues: { ...user } };
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+userSchema.statics.findByEmail = async function findUserByEmail(email) {
+  const user = await this.findOne({ email });
+  return user;
 };
 
-export const findOne = async userEmail => {
-  if (userEmail in db.users) {
-    return db.users[userEmail];
-  }
-  return null;
+userSchema.statics.findUsers = async function findUsersExceptRequestingAdmin(
+  adminId,
+) {
+  const users = await this.find({ _id: { $ne: adminId } }).select('-__v');
+  return users;
 };
 
-export const findAll = async userEmail => {
-  const { [userEmail]: _, ...otherUsers } = db.users;
-  return otherUsers;
-};
+userSchema.pre('remove', next => {
+  // eslint-disable-next-line no-underscore-dangle
+  this.model('Script').deleteMany({ user: this._id }, next);
+});
+
+const User = mongoose.model('User', userSchema);
+export default User;

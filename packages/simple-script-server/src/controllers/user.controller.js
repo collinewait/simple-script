@@ -1,33 +1,30 @@
-import { v4 as uuidv4 } from 'uuid';
+/* eslint-disable no-underscore-dangle */
 import { generateToken, hashPassword, validateCreds } from '../util/auth.utils';
-import { createUser, findOne, findAll } from '../models/user.model';
-import { getUserScripts } from '../models/scripts.model';
 
 export const userSignUp = async (req, res) => {
   const {
     firstName, lastName, email, password,
   } = req.body;
   const newPassword = await hashPassword(password);
-  const newUser = {
-    id: uuidv4(),
+  const newUser = new req.context.models.User({
     firstName,
     lastName,
     email,
     password: newPassword,
-    isAdmin: false,
-  };
-  const { dataValues } = await createUser(newUser);
+  });
+  const createdUser = await newUser.save();
+
   const payload = {
-    id: dataValues.id,
-    email: dataValues.email,
+    id: createdUser._id,
+    email: createdUser.email,
   };
   const token = await generateToken(payload);
   const data = {
-    id: dataValues.id,
-    firstName: dataValues.firstName,
-    lastName: dataValues.lastName,
-    email: dataValues.email,
-    isAdmin: dataValues.isAdmin,
+    id: createdUser._id,
+    firstName: createdUser.firstName,
+    lastName: createdUser.lastName,
+    email: createdUser.email,
+    isAdmin: createdUser.isAdmin,
   };
   res.status(201).json({
     message: 'success',
@@ -39,7 +36,7 @@ export const userSignUp = async (req, res) => {
 
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await findOne(email);
+  const user = await req.context.models.User.findByEmail(email);
   await validateCreds(user, password);
   const payload = {
     id: user.id,
@@ -65,20 +62,19 @@ export const addUser = async (req, res) => {
     firstName, lastName, email, password, isAdmin = false,
   } = req.body;
   const newPassword = await hashPassword(password);
-  const newUser = {
-    id: uuidv4(),
+  const newUser = new req.context.models.User({
     firstName,
     lastName,
     email,
     password: newPassword,
     isAdmin,
-  };
-  const { dataValues } = await createUser(newUser);
+  });
+  const createdUser = await newUser.save();
   const data = {
-    id: dataValues.id,
-    firstName: dataValues.firstName,
-    lastName: dataValues.lastName,
-    email: dataValues.email,
+    id: createdUser._id,
+    firstName: createdUser.firstName,
+    lastName: createdUser.lastName,
+    email: createdUser.email,
   };
   res.status(201).json({
     message: 'success',
@@ -88,8 +84,8 @@ export const addUser = async (req, res) => {
 };
 
 export const getAllUsers = async (req, res) => {
-  const { email } = res.locals.user;
-  const users = await findAll(email);
+  const { userId } = req.context.loggedIn;
+  const users = await req.context.models.User.findUsers(userId);
   res.status(200).json({
     message: 'success',
     status: 200,
@@ -98,29 +94,29 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { user } = req;
+  const { user } = req.context;
   const {
     firstName = user.firstName,
     lastName = user.lastName,
+    email = user.email,
     password,
     isAdmin = user.isAdmin,
   } = req.body;
   const newPassword = password ? await hashPassword(password) : user.password;
-  const updatedUser = {
-    ...user,
-    firstName,
-    lastName,
-    password: newPassword,
-    isAdmin,
-  };
 
-  const { dataValues } = await createUser(updatedUser);
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.password = newPassword;
+  user.isAdmin = isAdmin;
+  user.email = email;
+
+  const updatedUser = await user.save();
   const data = {
-    id: dataValues.id,
-    firstName: dataValues.firstName,
-    lastName: dataValues.lastName,
-    email: dataValues.email,
-    isAdmin: dataValues.isAdmin,
+    id: updatedUser._id,
+    firstName: updatedUser.firstName,
+    lastName: updatedUser.lastName,
+    email: updatedUser.email,
+    isAdmin: updatedUser.isAdmin,
   };
   res.status(200).json({
     message: 'success',
@@ -129,11 +125,11 @@ export const updateUser = async (req, res) => {
   });
 };
 
-export const getUser = async (req, res) => {
+export const getUserScripts = async (req, res) => {
   const { user } = req;
-  const { userEmail } = req.params;
+  const { userId } = req.params;
 
-  const userScripts = await getUserScripts(userEmail);
+  const userScripts = await req.context.models.Script.findByUser(userId);
   const data = {
     ...user,
     scripts: userScripts || {},

@@ -1,35 +1,26 @@
-import db from '../db';
+import mongoose from 'mongoose';
 
-export const saveScript = async (userEmail, script) => {
-  if (db.scripts[userEmail]) {
-    db.scripts[userEmail][script.id] = script;
-  } else {
-    db.scripts[userEmail] = {};
-    db.scripts[userEmail][script.id] = script;
-  }
+const scriptSchema = new mongoose.Schema({
+  script: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  runResults: {
+    type: Array,
+  },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+});
 
-  return {
-    ...script,
-  };
-};
-
-export const getUserScripts = async userEmail => {
-  const scripts = db.scripts[userEmail];
+scriptSchema.statics.findByUser = async function findScriptsByUser(userId) {
+  const scripts = await this.find({ user: userId }).select('-__v -user');
   return scripts;
 };
 
-export const findOne = async (userEmail, scriptId) => {
-  if (scriptId in db.scripts[userEmail]) {
-    return db.scripts[userEmail][scriptId];
-  }
-  return null;
+scriptSchema.statics.findSingleScript = async function findSingleScript(scriptId) {
+  const script = await this.findById(scriptId).select('-__v -user');
+  return script;
 };
 
-export const removeScript = async (userEmail, script) => {
-  if (db.scripts[userEmail][script.id]) {
-    delete db.scripts[userEmail][script.id];
-    return { ...script };
-  }
-
-  return null;
-};
+const Script = mongoose.model('Script', scriptSchema);
+export default Script;

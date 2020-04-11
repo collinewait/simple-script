@@ -1,19 +1,24 @@
-import { findOne } from '../models/scripts.model';
-
 export const findScript = async (req, res, next) => {
   const { scriptId } = req.params;
-  const { email } = res.locals.user;
 
-  const script = await findOne(email, scriptId);
-  if (script) {
-    req.script = script;
-    next();
-  } else {
-    return res.status(400).json({
-      status: 400,
-      message: `script not found with id: ${scriptId}`,
-    });
+  const notFound = {
+    status: 404,
+    message: `script not found with id: ${scriptId}`,
+  };
+
+  if (scriptId.match(/^[0-9a-fA-F]{24}$/)) {
+    const script = await req.context.models.Script.findSingleScript(scriptId);
+    if (!script) {
+      return res.status(404).json(notFound);
+    }
+    req.context = {
+      ...req.context,
+      script,
+    };
+    return next();
   }
+
+  return res.status(404).json(notFound);
 };
 
 export default findScript;

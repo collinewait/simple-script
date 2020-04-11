@@ -10,19 +10,32 @@ import {
   addUser,
   getAllUsers,
   updateUser,
-  getUser,
+  getUserScripts,
 } from '../controllers/user.controller';
 
 const userRouter = Router();
 
 userRouter
   .route('/users')
-  .post(verifyUser, verifyAdmin, asyncHandler(addUser))
-  .get(verifyUser, verifyAdmin, asyncHandler(getAllUsers));
-userRouter.use('/users/:userEmail', verifyUser, verifyAdmin, findUser); // used userEmail for ease, userId is better
+  .post(
+    asyncHandler(verifyUser),
+    asyncHandler(verifyAdmin),
+    asyncHandler(addUser),
+  )
+  .get(
+    asyncHandler(verifyUser),
+    asyncHandler(verifyAdmin),
+    asyncHandler(getAllUsers),
+  );
+userRouter.use(
+  '/users/:userId',
+  asyncHandler(verifyUser),
+  asyncHandler(verifyAdmin),
+  asyncHandler(findUser),
+);
 userRouter
-  .route('/users/:userEmail') // used userEmail for ease, userId is better
+  .route('/users/:userId')
   .put(asyncHandler(updateUser))
-  .get(asyncHandler(getUser));
+  .get(asyncHandler(getUserScripts));
 
 export default userRouter;

@@ -2,16 +2,16 @@ import express from 'express';
 import cors from 'cors';
 
 import router from './routes';
+import connectDb from './db';
+import Context from './middlewares/context.middleware';
 
 const app = express();
 
 app.use(cors());
-
-// Body parser configuration
 app.use(express.json());
-
-// Router configuration
+app.use(Context);
 app.use(router);
+
 
 app.get('/', (req, res) => {
   res.send('Hello, simple script here');
@@ -20,8 +20,13 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.set('port', PORT);
-const server = app.listen(app.get('port'), () => {
-  console.log(`Express running → PORT ${server.address().port}`);
+
+connectDb().then(async () => {
+  const server = app.listen(app.get('port'), () => {
+    console.log(`Express running → PORT ${server.address().port}`);
+  });
+}).catch(error => {
+  console.log(error);
 });
 
 export default app;

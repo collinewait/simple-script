@@ -1,10 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-
-import {
-  saveScript,
-  getUserScripts,
-  removeScript,
-} from '../models/scripts.model';
+/* eslint-disable no-underscore-dangle */
 
 const validOperations = {
   'DoThisThing(string)': 1,
@@ -82,18 +76,23 @@ const executeScript = async scriptStr => {
 
 export const createScript = async (req, res) => {
   const { operations } = req.body;
-  const { email } = res.locals.user;
+  const { userId } = req.context.loggedIn;
 
   if (operations && operations.length) {
     const script = await generateScript(operations);
-    const id = uuidv4();
-    const newScript = { id, script, runResults: '' };
-    const savedScript = await saveScript(email, newScript);
+    const newScript = new req.context.models.Script({
+      script, runResults: [], user: userId,
+    });
+    const savedScript = await newScript.save();
 
     res.status(201).json({
       message: 'success',
       status: 201,
-      data: savedScript,
+      data: {
+        _id: savedScript._id,
+        runResults: savedScript.runResults,
+        script: savedScript.script,
+      },
     });
   } else {
     const missingOps = {
@@ -105,8 +104,8 @@ export const createScript = async (req, res) => {
 };
 
 export const getAllScripts = async (req, res) => {
-  const { email } = res.locals.user;
-  const scripts = await getUserScripts(email);
+  const { userId } = req.context.loggedIn;
+  const scripts = await req.context.models.Script.findByUser(userId);
   const data = scripts || {};
   res.status(200).json({
     message: 'success',
@@ -116,32 +115,34 @@ export const getAllScripts = async (req, res) => {
 };
 
 export const getSingleScript = async (req, res) => {
-  const { script } = req;
-  const data = script || {};
+  const { script } = req.context;
   res.status(200).json({
     message: 'success',
     status: 200,
-    data,
+    data: {
+      _id: script._id,
+      runResults: script.runResults,
+      script: script.script,
+    },
   });
 };
 
 export const updateScript = async (req, res) => {
   const isValid = await verifyScript(req.body.script);
   if (isValid) {
-    const { script } = req;
-    const { email } = res.locals.user;
-    const runResults = script.script === req.body.script ? script.runResults : '';
-    const newUpdate = {
-      ...script,
-      script: req.body.script,
-      runResults,
-    };
+    const { script } = req.context;
+    const runResults = script.script === req.body.script ? script.runResults : [];
     script.script = req.body.script;
-    const updatedScript = await saveScript(email, newUpdate);
+    script.runResults = runResults;
+    const updatedScript = await script.save();
     res.status(200).json({
       message: 'success',
       status: 200,
-      data: updatedScript,
+      data: {
+        _id: updatedScript._id,
+        runResults: updatedScript.runResults,
+        script: updatedScript.script,
+      },
     });
   } else {
     throw invalidOps;
@@ -149,32 +150,22 @@ export const updateScript = async (req, res) => {
 };
 
 export const deleteScript = async (req, res) => {
-  const { script } = req;
-  const { email } = res.locals.user;
-  const deletedScript = await removeScript(email, script);
-  if (deletedScript) {
-    res.status(204).json({});
-  } else {
-    const err = {
-      status: 500,
-      message: 'something wrong happened during deletion',
-    };
-    throw err;
-  }
+  await req.context.script.remove();
+  res.sendStatus(204);
 };
 
 export const updateScriptOutput = async (req, res) => {
-  const { script } = req;
-  const { email } = res.locals.user;
+  const { script } = req.context;
   const scriptOutput = await executeScript(script.script);
-  const scriptWithUpdatedOutput = {
-    ...script,
-    runResults: scriptOutput,
-  };
-  const updatedScript = await saveScript(email, scriptWithUpdatedOutput);
+  script.runResults = scriptOutput;
+  const updatedScript = await script.save();
   res.status(200).json({
     message: 'success',
     status: 200,
-    data: updatedScript,
+    data: {
+      _id: updatedScript._id,
+      runResults: updatedScript.runResults,
+      script: updatedScript.script,
+    },
   });
 };

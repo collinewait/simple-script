@@ -1,16 +1,17 @@
-import { findOne } from '../models/user.model';
-import { decodeToken } from '../util/auth.utils';
-import { validateEmail } from '../util/auth.utils';
+/* eslint-disable no-underscore-dangle */
+import { decodeToken, validateEmail } from '../util/auth.utils';
 
 // eslint-disable-next-line consistent-return
 export const validateUser = async (req, res, next) => {
   try {
-    const { email, firstName, lastName, password } = req.body;
+    const {
+      email, firstName, lastName, password,
+    } = req.body;
     if (
-      !email.trim() ||
-      !firstName.trim() ||
-      !lastName.trim() ||
-      !password.trim()
+      !email.trim()
+      || !firstName.trim()
+      || !lastName.trim()
+      || !password.trim()
     ) {
       return res.status(401).json({
         status: 401,
@@ -25,18 +26,17 @@ export const validateUser = async (req, res, next) => {
         message: ' Invalid email address',
       });
     }
-
-    const user = await findOne(email);
-    if (user !== null) {
+    const user = await req.context.models.User.findByEmail(email);
+    if (user) {
       return res.status(401).json({
         status: 401,
         message:
           ' Invalid details, please check your email address or password',
       });
     }
-    next();
+    return next();
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error: error.message });
   }
 };
 
@@ -59,53 +59,54 @@ export const verifyUser = async (req, res, next) => {
       message: 'Invalid token, please login',
     });
   }
-  const user = await findOne(decoded.email);
+  const user = await req.context.models.User.findByEmail(decoded.email);
 
   if (user) {
-    res.locals.user = {
-      email: decoded.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userId: user.id,
-      isAdmin: user.isAdmin,
+    req.context = {
+      ...req.context,
+      loggedIn: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        // eslint-disable-next-line no-underscore-dangle
+        userId: user._id,
+        isAdmin: user.isAdmin,
+      },
     };
-    next();
-  } else {
-    return res.status(401).json({
-      status: 401,
-      message: 'Invalid credentials, please login',
-    });
+    return next();
   }
+
+  return res.status(401).json({
+    status: 401,
+    message: 'Invalid credentials, please login',
+  });
 };
 
 export const verifyAdmin = async (req, res, next) => {
-  const { isAdmin } = res.locals.user;
+  const { isAdmin } = req.context.loggedIn;
   if (isAdmin) {
-    next();
-  } else {
-    return res.status(403).json({
-      status: 403,
-      message: 'permission denied',
-    });
+    return next();
   }
+
+  return res.status(403).json({
+    status: 403,
+    message: 'permission denied',
+  });
 };
 
 export const findUser = async (req, res, next) => {
-  const { userEmail } = req.params;
-  const user = await findOne(userEmail);
+  const { userId } = req.params;
+  const user = await req.context.models.User.findById(userId);
   if (user) {
-    req.user = {
-      email: userEmail,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      id: user.id,
-      isAdmin: user.isAdmin,
+    req.context = {
+      ...req.context,
+      user,
     };
-    next();
-  } else {
-    return res.status(400).json({
-      status: 400,
-      message: `user not found with email: ${userEmail}`,
-    });
+    return next();
   }
+
+  return res.status(400).json({
+    status: 400,
+    message: `user not found with email: ${userId}`,
+  });
 };

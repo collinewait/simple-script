@@ -2,10 +2,9 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import config from '../config';
 
-export const generateToken = async payload =>
-  jwt.sign(payload, config.SECRET_KEY, {
-    expiresIn: config.expiresIn,
-  });
+export const generateToken = async payload => jwt.sign(payload, config.SECRET_KEY, {
+  expiresIn: config.expiresIn,
+});
 
 export const decodeToken = async token => {
   const data = jwt.verify(token, config.SECRET_KEY, (err, decoded) => {
