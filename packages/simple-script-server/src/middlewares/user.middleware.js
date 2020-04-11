@@ -107,6 +107,6 @@ export const findUser = async (req, res, next) => {
 
   return res.status(400).json({
     status: 400,
-    message: `user not found with email: ${userId}`,
+    message: `user not found with id: ${userId}`,
   });
 };

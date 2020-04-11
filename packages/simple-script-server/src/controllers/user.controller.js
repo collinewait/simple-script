@@ -125,13 +125,20 @@ export const updateUser = async (req, res) => {
   });
 };
 
-export const getUserScripts = async (req, res) => {
-  const { user } = req;
+export const getUserWithScripts = async (req, res) => {
+  const {
+    firstName, lastName, email, _id: id,
+  } = req.context.user;
   const { userId } = req.params;
 
   const userScripts = await req.context.models.Script.findByUser(userId);
   const data = {
-    ...user,
+    user: {
+      id,
+      firstName,
+      lastName,
+      email,
+    },
     scripts: userScripts || {},
   };
 

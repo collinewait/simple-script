@@ -34,7 +34,7 @@ export class EditScriptComponent implements OnInit {
 
     getScriptById(id: any) {
       this.scpt.getScriptById(id).subscribe((res: any) => {
-        this.id = res.data.id;
+        this.id = res.data._id;
         this.scriptForm.setValue({
           script: res.data.script.replace(/\n/g, '\\n')
         });
@@ -46,7 +46,7 @@ export class EditScriptComponent implements OnInit {
       const data = { script: this.scriptForm.value.script.replace(/\\n/g, '\n') };
       this.scpt.updateScript(this.id, data)
         .subscribe((res: any) => {
-            const scriptId = res.data.id;
+            const scriptId = res.data._id;
             this.isLoadingResults = false;
             this.router.navigate(['/script-details', scriptId]);
           }, (err: any) => {

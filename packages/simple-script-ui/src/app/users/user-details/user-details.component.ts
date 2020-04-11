@@ -17,15 +17,15 @@ export class UserDetailsComponent implements OnInit {
   constructor(private userService: UserService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.getUserDetails(this.route.snapshot.params.email);
+    this.getUserDetails(this.route.snapshot.params.id);
   }
 
-  getUserDetails(email: string) {
-    this.userService.getUserByEmail(email)
+  getUserDetails(id: string) {
+    this.userService.getUserById(id)
       .subscribe((res: any) => {
-        const { scripts, ...userData } = res.data;
-        this.user = userData;
-        this.scriptsData = Object.values(scripts);
+        const { scripts, user } = res.data;
+        this.user = user;
+        this.scriptsData = scripts;
         this.isLoadingResults = false;
       }, (err) => {
         console.log(err);

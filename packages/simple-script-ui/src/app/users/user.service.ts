@@ -21,13 +21,13 @@ export class UserService {
     return this.http.post<any>(apiUrl, user);
   }
 
-  getUserByEmail(userEmail: string) {
-    const url = `${apiUrl}/${userEmail}`;
+  getUserById(userId: string) {
+    const url = `${apiUrl}/${userId}`;
     return this.http.get<any>(url);
   }
 
-  updateUser(userEmail: string, userData) {
-    const url = `${apiUrl}/${userEmail}`;
+  updateUser(userId: string, userData) {
+    const url = `${apiUrl}/${userId}`;
     return this.http.put(url, userData, httpOptions);
   }
 }

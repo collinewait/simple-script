@@ -17,7 +17,7 @@ export class ScriptsComponent implements OnInit {
   ngOnInit(): void {
     this.scpt.getScripts()
     .subscribe((res: any) => {
-      this.data = Object.values(res.data);
+      this.data = res.data;
       this.isLoadingResults = false;
     }, err => {
       console.log(err);

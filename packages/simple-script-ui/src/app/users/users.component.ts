@@ -15,7 +15,7 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.user.getUsers()
     .subscribe((res: any) => {
-      this.data = Object.keys(res.data).map(i => ({...res.data[i], email: i}));
+      this.data = res.data;
       this.isLoadingResults = false;
     }, err => {
       console.log(err);

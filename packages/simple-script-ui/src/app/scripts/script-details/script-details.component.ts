@@ -9,7 +9,7 @@ import { ScriptsService } from '../scripts.service';
   styleUrls: ['./script-details.component.scss']
 })
 export class ScriptDetailsComponent implements OnInit {
-  script = { id: '', script: '', runResults: '', updated: null };
+  script = { _id: '', script: '', runResults: '', updated: null };
   isLoadingResults = false;
 
   constructor(
@@ -24,7 +24,11 @@ export class ScriptDetailsComponent implements OnInit {
   getScriptDetails(id: string) {
     this.scpt.getScriptById(id)
       .subscribe((res: any) => {
-        this.script = {...res.data, script: this.escapeNewline(res.data.script)};
+        this.script = {
+          ...res.data,
+          script: this.escapeNewline(res.data.script),
+          runResults: res.data.runResults.toString(),
+        };
         this.isLoadingResults = false;
       }, (err) => {
         console.log(err);

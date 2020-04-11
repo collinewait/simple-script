@@ -23,9 +23,9 @@ const routes: Routes = [
   { path: 'script-details/:id', component: ScriptDetailsComponent },
   { path: 'edit-script/:id', component: EditScriptComponent },
   { path: 'users', component: UsersComponent},
-  { path: 'user-details/:email', component: UserDetailsComponent},
+  { path: 'user-details/:id', component: UserDetailsComponent},
   { path: 'add-user', component: AddUserComponent },
-  { path: 'edit-user/:email', component: EditUserComponent}
+  { path: 'edit-user/:id', component: EditUserComponent}
 ];
 
 @NgModule({

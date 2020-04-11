@@ -15,6 +15,7 @@ export class EditUserComponent implements OnInit {
   firstName = '';
   lastName = '';
   email = '';
+  id = '';
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
 
@@ -25,30 +26,30 @@ export class EditUserComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.getUserByEmail(this.route.snapshot.params.email);
+    this.getUserById(this.route.snapshot.params.id);
     this.userData = this.formBuilder.group({
       firstName : [null, Validators.required],
       lastName : [null, Validators.required]
     });
   }
 
-  getUserByEmail(email: string) {
-    this.user.getUserByEmail(email).subscribe((res: any) => {
-      this.email = res.data.email;
+  getUserById(id: string) {
+    this.user.getUserById(id).subscribe((res: any) => {
+      this.id = res.data.user.id;
       this.userData.setValue({
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
+        firstName: res.data.user.firstName,
+        lastName: res.data.user.lastName,
       });
     });
   }
 
   onFormSubmit() {
     this.isLoadingResults = true;
-    this.user.updateUser(this.email, this.userData.value)
+    this.user.updateUser(this.id, this.userData.value)
       .subscribe((res: any) => {
-          const userEmail = res.data.email;
+          const userId = res.data.id;
           this.isLoadingResults = false;
-          this.router.navigate(['/user-details', userEmail]);
+          this.router.navigate(['/user-details', userId]);
         }, (err: any) => {
           console.log(err);
           this.isLoadingResults = false;

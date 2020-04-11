@@ -10,7 +10,7 @@ import {
   addUser,
   getAllUsers,
   updateUser,
-  getUserScripts,
+  getUserWithScripts,
 } from '../controllers/user.controller';
 
 const userRouter = Router();
@@ -36,6 +36,6 @@ userRouter.use(
 userRouter
   .route('/users/:userId')
   .put(asyncHandler(updateUser))
-  .get(asyncHandler(getUserScripts));
+  .get(asyncHandler(getUserWithScripts));
 
 export default userRouter;
