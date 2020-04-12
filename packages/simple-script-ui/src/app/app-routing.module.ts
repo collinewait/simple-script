@@ -19,13 +19,13 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: 'scripts', component: ScriptsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  { path: 'create-script', component: CreateScriptComponent},
-  { path: 'script-details/:id', component: ScriptDetailsComponent },
-  { path: 'edit-script/:id', component: EditScriptComponent },
-  { path: 'users', component: UsersComponent},
-  { path: 'user-details/:id', component: UserDetailsComponent},
-  { path: 'add-user', component: AddUserComponent },
-  { path: 'edit-user/:id', component: EditUserComponent}
+  { path: 'create-script', component: CreateScriptComponent, canActivate: [AuthGuard] },
+  { path: 'script-details/:id', component: ScriptDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'edit-script/:id', component: EditScriptComponent, canActivate: [AuthGuard] },
+  { path: 'users', component: UsersComponent, canActivate: [AuthGuard]},
+  { path: 'user-details/:id', component: UserDetailsComponent, canActivate: [AuthGuard]},
+  { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard] },
+  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
