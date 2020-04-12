@@ -31,6 +31,7 @@ import { UsersComponent } from './users/users.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
 import { AddUserComponent } from './users/add-user/add-user.component';
 import { EditUserComponent } from './users/edit-user/edit-user.component';
+import { ErrorComponent } from './common/error/error.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { EditUserComponent } from './users/edit-user/edit-user.component';
     UsersComponent,
     UserDetailsComponent,
     AddUserComponent,
-    EditUserComponent
+    EditUserComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

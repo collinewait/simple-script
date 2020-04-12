@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
   email = '';
   password = '';
   isLoadingResults = false;
-  loginInvalid = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private router: Router,
@@ -38,15 +38,17 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
+    this.isLoadingResults = true;
     this.auth.loginUser(this.userData.value).subscribe(
       res => {
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
         localStorage.setItem('token', res.token);
         localStorage.setItem('is-admin', res.data.isAdmin);
         this.router.navigate(['/scripts']);
       }, err => {
         this.isLoadingResults = false;
-        this.loginInvalid = true;
+        this.errorRes = { error: true, msg: err.error.message };
       }
     );
   }

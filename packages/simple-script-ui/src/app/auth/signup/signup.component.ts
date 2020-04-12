@@ -18,8 +18,8 @@ export class SignupComponent implements OnInit {
   email = '';
   password = '';
   isLoadingResults = false;
-  signupInvalid = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private auth: AuthService,
@@ -36,15 +36,17 @@ export class SignupComponent implements OnInit {
   }
 
   onFormSubmit() {
+    this.isLoadingResults = true;
     this.auth.registerUser(this.userData.value)
       .subscribe(res => {
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
         localStorage.setItem('token', res.token);
         localStorage.setItem('is-admin', res.data.isAdmin);
         this.router.navigate(['/scripts']);
       }, err => {
         this.isLoadingResults = false;
-        this.signupInvalid = true;
+        this.errorRes = { error: true, msg: err.error.message };
       });
   }
 }

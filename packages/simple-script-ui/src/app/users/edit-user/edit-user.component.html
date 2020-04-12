@@ -9,9 +9,7 @@
   </div>
   <mat-card class="example-card">
     <form [formGroup]="userData" (ngSubmit)="onFormSubmit()">
-      <mat-error *ngIf="errorRes.error">
-        {{errorRes.msg}}
-      </mat-error>
+      <app-error [errorRes]="errorRes"></app-error>
       <mat-form-field class="example-full-width">
         <input formControlName="firstName" matInput type="text"
           placeholder="First name" [errorStateMatcher]="matcher">

@@ -10,9 +10,7 @@
   </div>
   <mat-card class="example-card">
     <form [formGroup]="scriptForm" (ngSubmit)="onFormSubmit()">
-      <mat-error *ngIf="errorRes.error">
-        {{errorRes.msg}}
-      </mat-error>
+      <app-error [errorRes]="errorRes"></app-error>
       <mat-form-field class="example-full-width">
         <mat-label>Operations</mat-label>
         <input matInput placeholder="Comma seperated operations without a comma at the end e.g: DoThisThing(string), DoThatThing(integer)"

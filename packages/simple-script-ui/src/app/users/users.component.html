@@ -9,9 +9,7 @@
     <a mat-flat-button color="accent" [routerLink]="['/add-user']"><mat-icon>add</mat-icon>User</a>
   </div>
   <div class="mat-elevation-z8">
-    <mat-error *ngIf="errorRes.error">
-      {{errorRes.msg}}
-    </mat-error>
+    <app-error [errorRes]="errorRes"></app-error>
     <table mat-table [dataSource]="data"
           matSort matSortActive="name" matSortDisableClear matSortDirection="asc">
 
