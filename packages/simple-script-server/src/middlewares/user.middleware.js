@@ -3,6 +3,7 @@ import { decodeToken, validateEmail } from '../util/auth.utils';
 
 // eslint-disable-next-line consistent-return
 export const validateUser = async (req, res, next) => {
+  const inValidUserMsg = 'Invalid details, please check your email address or password';
   try {
     const {
       email, firstName, lastName, password,
@@ -23,15 +24,14 @@ export const validateUser = async (req, res, next) => {
     if (!validEmail) {
       return res.status(401).json({
         status: 401,
-        message: ' Invalid email address',
+        message: inValidUserMsg,
       });
     }
     const user = await req.context.models.User.findByEmail(email);
     if (user) {
       return res.status(401).json({
         status: 401,
-        message:
-          ' Invalid details, please check your email address or password',
+        message: inValidUserMsg,
       });
     }
     return next();
@@ -41,11 +41,12 @@ export const validateUser = async (req, res, next) => {
 };
 
 export const verifyUser = async (req, res, next) => {
+  const loginRequest = 'Invalid credentials, please login';
   let token = req.headers['x-access-token'] || req.headers.authorization;
   if (token === undefined) {
     return res.status(401).json({
       status: 401,
-      message: 'Token not provided',
+      message: loginRequest,
     });
   }
   if (token.startsWith('Bearer ')) {
@@ -56,7 +57,7 @@ export const verifyUser = async (req, res, next) => {
   if (Object.keys(decoded)[0] === 'error') {
     return res.status(401).json({
       status: 401,
-      message: 'Invalid token, please login',
+      message: loginRequest,
     });
   }
   const user = await req.context.models.User.findByEmail(decoded.email);
@@ -78,7 +79,7 @@ export const verifyUser = async (req, res, next) => {
 
   return res.status(401).json({
     status: 401,
-    message: 'Invalid credentials, please login',
+    message: loginRequest,
   });
 };
 
