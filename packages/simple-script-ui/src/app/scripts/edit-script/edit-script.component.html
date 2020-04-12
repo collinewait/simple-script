@@ -9,6 +9,9 @@
   </div>
   <mat-card class="example-card">
     <form [formGroup]="scriptForm" (ngSubmit)="onFormSubmit()">
+      <mat-error *ngIf="errorRes.error">
+        {{errorRes.msg}}
+      </mat-error>
       <mat-form-field class="example-full-width">
         <mat-label>Script</mat-label>
         <input matInput placeholder="Script e.g: DoThisThing(string)\nDoThatThing(integer"

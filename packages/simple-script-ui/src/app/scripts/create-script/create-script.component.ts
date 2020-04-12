@@ -17,6 +17,7 @@ export class CreateScriptComponent implements OnInit {
   operations = '';
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,11 +38,12 @@ export class CreateScriptComponent implements OnInit {
       res => {
         const id = res.data.id;
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
         this.router.navigate(['/script-details', id]);
       },
       err => {
-        console.log(err);
         this.isLoadingResults = false;
+        this.errorRes = { error: true, msg: err.error.message };
       }
     );
   }

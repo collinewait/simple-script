@@ -18,6 +18,7 @@ export class EditScriptComponent implements OnInit {
   script = '';
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private router: Router,
@@ -33,11 +34,17 @@ export class EditScriptComponent implements OnInit {
     }
 
     getScriptById(id: any) {
+      this.isLoadingResults = true;
       this.scpt.getScriptById(id).subscribe((res: any) => {
-        this.id = res.data._id;
+        this.id = res.data.id;
+        this.isLoadingResults = false;
         this.scriptForm.setValue({
           script: res.data.script.replace(/\n/g, '\\n')
         });
+        this.errorRes = { error: false, msg: '' };
+      }, (err: any) => {
+        this.isLoadingResults = false;
+        this.errorRes = { error: true, msg: err.error.message };
       });
     }
 
@@ -46,12 +53,13 @@ export class EditScriptComponent implements OnInit {
       const data = { script: this.scriptForm.value.script.replace(/\\n/g, '\n') };
       this.scpt.updateScript(this.id, data)
         .subscribe((res: any) => {
-            const scriptId = res.data._id;
+            const scriptId = res.data.id;
             this.isLoadingResults = false;
+            this.errorRes = { error: false, msg: '' };
             this.router.navigate(['/script-details', scriptId]);
           }, (err: any) => {
-            console.log(err);
             this.isLoadingResults = false;
+            this.errorRes = { error: true, msg: err.error.message };
           }
         );
     }

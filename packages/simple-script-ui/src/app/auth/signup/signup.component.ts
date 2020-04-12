@@ -39,14 +39,12 @@ export class SignupComponent implements OnInit {
     this.auth.registerUser(this.userData.value)
       .subscribe(res => {
         this.isLoadingResults = false;
-        console.log(res);
         localStorage.setItem('token', res.token);
         localStorage.setItem('is-admin', res.data.isAdmin);
         this.router.navigate(['/scripts']);
       }, err => {
         this.isLoadingResults = false;
         this.signupInvalid = true;
-        console.log(err);
       });
   }
 }

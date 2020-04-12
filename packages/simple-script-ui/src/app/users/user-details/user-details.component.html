@@ -8,6 +8,9 @@
     <a mat-flat-button color="primary" [routerLink]="['/users']"><mat-icon>list</mat-icon></a>
   </div>
   <mat-card class="example-card">
+    <mat-error *ngIf="errorRes.error">
+      {{errorRes.msg}}
+    </mat-error>
     <mat-card-content>
       <dl>
         <dt>Id:</dt>

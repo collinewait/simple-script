@@ -9,8 +9,9 @@ import { ScriptsService } from '../scripts.service';
   styleUrls: ['./script-details.component.scss']
 })
 export class ScriptDetailsComponent implements OnInit {
-  script = { _id: '', script: '', runResults: '', updated: null };
+  script = { id: '', script: '', runResults: '', updated: null };
   isLoadingResults = false;
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private scpt: ScriptsService,
@@ -22,6 +23,7 @@ export class ScriptDetailsComponent implements OnInit {
   }
 
   getScriptDetails(id: string) {
+    this.isLoadingResults = true;
     this.scpt.getScriptById(id)
       .subscribe((res: any) => {
         this.script = {
@@ -29,9 +31,10 @@ export class ScriptDetailsComponent implements OnInit {
           script: this.escapeNewline(res.data.script),
           runResults: res.data.runResults.toString(),
         };
+        this.errorRes = { error: false, msg: '' };
         this.isLoadingResults = false;
       }, (err) => {
-        console.log(err);
+        this.errorRes = { error: true, msg: err.error.message };
         this.isLoadingResults = false;
       });
   }
@@ -41,9 +44,10 @@ export class ScriptDetailsComponent implements OnInit {
     this.scpt.deleteScript(id)
       .subscribe(res => {
           this.isLoadingResults = false;
+          this.errorRes = { error: false, msg: '' };
           this.router.navigate(['/scripts']);
         }, (err) => {
-          console.log(err);
+          this.errorRes = { error: true, msg: err.error.message };
           this.isLoadingResults = false;
         }
       );
@@ -55,8 +59,9 @@ export class ScriptDetailsComponent implements OnInit {
       .subscribe((res: any) => {
         this.script = {...res.data, script: this.escapeNewline(res.data.script)};
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
         }, (err) => {
-          console.log(err);
+          this.errorRes = { error: true, msg: err.error.message };
           this.isLoadingResults = false;
         }
       );

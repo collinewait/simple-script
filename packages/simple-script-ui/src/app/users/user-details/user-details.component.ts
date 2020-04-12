@@ -13,6 +13,7 @@ export class UserDetailsComponent implements OnInit {
   scriptsData = [];
   user = { id: '', firstName: '', lastName: '', email: '' };
   isLoadingResults = false;
+  errorRes = { error: false, msg: '' };
 
   constructor(private userService: UserService, private route: ActivatedRoute) { }
 
@@ -21,15 +22,17 @@ export class UserDetailsComponent implements OnInit {
   }
 
   getUserDetails(id: string) {
+    this.isLoadingResults = true;
     this.userService.getUserById(id)
       .subscribe((res: any) => {
         const { scripts, user } = res.data;
         this.user = user;
         this.scriptsData = scripts;
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
       }, (err) => {
-        console.log(err);
         this.isLoadingResults = false;
+        this.errorRes = { error: true, msg: err.error.message };
       });
     }
 

@@ -89,7 +89,7 @@ export const createScript = async (req, res) => {
       message: 'success',
       status: 201,
       data: {
-        _id: savedScript._id,
+        id: savedScript._id,
         runResults: savedScript.runResults,
         script: savedScript.script,
       },
@@ -120,7 +120,7 @@ export const getSingleScript = async (req, res) => {
     message: 'success',
     status: 200,
     data: {
-      _id: script._id,
+      id: script._id,
       runResults: script.runResults,
       script: script.script,
     },
@@ -139,7 +139,7 @@ export const updateScript = async (req, res) => {
       message: 'success',
       status: 200,
       data: {
-        _id: updatedScript._id,
+        id: updatedScript._id,
         runResults: updatedScript.runResults,
         script: updatedScript.script,
       },
@@ -163,7 +163,7 @@ export const updateScriptOutput = async (req, res) => {
     message: 'success',
     status: 200,
     data: {
-      _id: updatedScript._id,
+      id: updatedScript._id,
       runResults: updatedScript.runResults,
       script: updatedScript.script,
     },

@@ -8,10 +8,13 @@
     <a mat-flat-button color="primary" [routerLink]="['/scripts']"><mat-icon>list</mat-icon></a>
   </div>
   <mat-card class="example-card">
+    <mat-error *ngIf="errorRes.error">
+      {{errorRes.msg}}
+    </mat-error>
     <mat-card-content>
       <dl>
         <dt>Id:</dt>
-        <dd>{{script._id}}</dd>
+        <dd>{{script.id}}</dd>
         <dt>Script:</dt>
         <dd>{{script.script}}</dd>
         <dt>Output:</dt>
@@ -19,9 +22,9 @@
       </dl>
     </mat-card-content>
     <mat-card-actions>
-      <a mat-flat-button color="primary" [routerLink]="['/edit-script', script._id]"><mat-icon>edit</mat-icon>Script</a>
-      <a mat-flat-button color="accent" (click)="runScript(script._id)"><mat-icon>autorenew</mat-icon>Run</a>
-      <a mat-flat-button color="warn" class="delete" (click)="deleteScript(script._id)"><mat-icon>delete</mat-icon>Script</a>
+      <a mat-flat-button color="primary" [routerLink]="['/edit-script', script.id]"><mat-icon>edit</mat-icon>Script</a>
+      <a mat-flat-button color="accent" (click)="runScript(script.id)"><mat-icon>autorenew</mat-icon>Run</a>
+      <a mat-flat-button color="warn" class="delete" (click)="deleteScript(script.id)"><mat-icon>delete</mat-icon>Script</a>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -9,6 +9,9 @@
     <a *ngIf="auth.isAdmin()" mat-flat-button color="accent" [routerLink]="['/users']"><mat-icon>people</mat-icon>Users</a>
   </div>
   <div class="mat-elevation-z8">
+    <mat-error *ngIf="errorRes.error">
+      {{errorRes.msg}}
+    </mat-error>
     <table mat-table [dataSource]="data">
 
       <ng-container matColumnDef="id">

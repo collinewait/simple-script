@@ -18,6 +18,7 @@ export class EditUserComponent implements OnInit {
   id = '';
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private router: Router,
@@ -34,13 +35,20 @@ export class EditUserComponent implements OnInit {
   }
 
   getUserById(id: string) {
+    this.isLoadingResults = true;
     this.user.getUserById(id).subscribe((res: any) => {
       this.id = res.data.user.id;
       this.userData.setValue({
         firstName: res.data.user.firstName,
         lastName: res.data.user.lastName,
       });
-    });
+      this.isLoadingResults = false;
+      this.errorRes = { error: false, msg: '' };
+    }, (err: any) => {
+        this.errorRes = { error: true, msg: err.error.message };
+        this.isLoadingResults = false;
+      }
+    );
   }
 
   onFormSubmit() {
@@ -49,16 +57,17 @@ export class EditUserComponent implements OnInit {
       .subscribe((res: any) => {
           const userId = res.data.id;
           this.isLoadingResults = false;
+          this.errorRes = { error: false, msg: '' };
           this.router.navigate(['/user-details', userId]);
         }, (err: any) => {
-          console.log(err);
+          this.errorRes = { error: true, msg: err.error.message };
           this.isLoadingResults = false;
         }
       );
   }
 
   userDetails() {
-    this.router.navigate(['/user-details', this.email]);
+    this.router.navigate(['/user-details', this.id]);
   }
 
 }

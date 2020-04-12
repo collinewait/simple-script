@@ -1,3 +1,4 @@
+// eslint-disable-next-line consistent-return
 const asyncHandler = callback => async (req, res, next) => {
   try {
     await callback(req, res, next);
@@ -7,13 +8,13 @@ const asyncHandler = callback => async (req, res, next) => {
     if (error.name === 'MongoError' && error.code === 11000) {
       return res.status(400).send({
         status: 400,
-        error: 'Duplicates are not allowed',
+        message: 'Duplicates are not allowed',
       });
     }
 
     return res.status(errStatus).send({
       status: errStatus,
-      error: error.message,
+      message: error.message,
     });
   }
 };

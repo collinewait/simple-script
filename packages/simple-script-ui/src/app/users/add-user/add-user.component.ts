@@ -18,6 +18,7 @@ export class AddUserComponent implements OnInit {
   password = '';
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
+  errorRes = { error: false, msg: '' };
 
   constructor(
     private user: UserService,
@@ -34,14 +35,16 @@ export class AddUserComponent implements OnInit {
   }
 
   onFormSubmit() {
+    this.isLoadingResults = true;
     this.user.addUser(this.userData.value)
       .subscribe(res => {
         const id = res.data.id;
         this.isLoadingResults = false;
+        this.errorRes = { error: false, msg: '' };
         this.router.navigate(['/user-details', id]);
       }, err => {
         this.isLoadingResults = false;
-        console.log(err);
+        this.errorRes = { error: true, msg: err.error.message };
       });
   }
 
