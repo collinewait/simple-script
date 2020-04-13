@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { environment } from '../../environments/environment';
+
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
-const apiUrl = 'http://localhost:3000/api/v1/users';
+
+const baseApiUrl = environment.baseApiUrl;
+
+const apiUrl = `${baseApiUrl}/api/v1/users`;
 
 @Injectable({
   providedIn: 'root'

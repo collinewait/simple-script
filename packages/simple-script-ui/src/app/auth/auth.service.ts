@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { IUser } from '../user.model';
+import { environment } from '../../environments/environment';
 
 interface RegData {
   email: string;
@@ -12,7 +13,10 @@ interface RegData {
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
-const apiUrl = 'http://localhost:3000/api/auth';
+
+const baseApiUrl = environment.baseApiUrl;
+
+const apiUrl = `${baseApiUrl}/api/auth`;
 
 @Injectable({
   providedIn: 'root'
