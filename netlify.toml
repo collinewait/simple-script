@@ -1,4 +1,4 @@
 [build]
   base    = "packages/simple-script-ui"
-  publish = "packages/simple-script-ui/dist/simple-script-ui"
+  publish = "dist/simple-script-ui"
   command = "npm run build"
