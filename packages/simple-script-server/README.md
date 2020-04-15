@@ -1,17 +1,23 @@
-# Simple script
+# Simple script backend
 
-A simple node backend for a fictitious app that creates scripts in a fake language. It is using an in-memory data store. Basically playing with objects.
+A simple node backend for a fictitious app that creates scripts in a fake language. 
 
 ## GET STARTED
 
 ### Set up
 
-- Navigate to the directory where you want to copy this repo, clone it by running `git clone <link of the repo>`
+- Navigate to the directory where you want to copy this repo, clone it by running `git clone https://github.com/collinewait/simple-script.git`
 
 ### Run the app
+- `cd` into the root of the project with `cd simple-script`
+- `cd` into the package containing the backend with `cd packages/simple-script-server`
 
-- Run `npm install` to install dependencies
-- Run `npm start` to start the application
+create a `.env` file and add the contents in `.sample.env` file. Update the values with your environment values. Don't forget to delete the comments next to the values.
+
+And then run the following commands.
+
+- Run `yarn install` to install dependencies
+- Run `yarn start` to start the application
 
 ### API Endpoints
 
@@ -25,8 +31,5 @@ A simple node backend for a fictitious app that creates scripts in a fake langua
 - PATCH /api/v1/scripts/${scriptId} - user can execute a script and update its output value
 - POST /api/v1/users - admin can add a user
 - GET /api/v1/users - admin can get a list of users
-- GET /api/v1/users/${userEmail} - admin can get a single user with his scripts. `userEmail` used here for brevity. `userId` would have been better.  
-- PUT /api/v1/users/${userEmail} - admin can update a user.
-
-
-You can login as an admin with a sample user hard coded. These are the details: `email: "wait@wait.com"` and `password: "pass"`
+- GET /api/v1/users/${userId} - admin can get a single user with his scripts.  
+- PUT /api/v1/users/${userId} - admin can update a user.
