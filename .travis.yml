@@ -9,4 +9,8 @@ matrix:
     - name: "Server Pipeline"
       env: TARGET=packages/simple-script-server
 
-script: if .travis/build-condition.sh $TRAVIS_COMMIT_RANGE $TARGET; then echo "$TARGET is being built" && cd $TARGET && yarn lint && yarn test && yarn build; else echo "$TARGET is NOT being built"; fi
+script:
+  - cd $TARGET
+  - yarn lint
+  - yarn test
+  - yarn build
