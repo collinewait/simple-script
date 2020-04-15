@@ -7,10 +7,17 @@ cache: yarn
 matrix:
   include:
     - name: "Server Pipeline"
-      env: TARGET=packages/simple-script-server
+      env: TARGET=packages/simple-script-server APP_NAME=simple-script
 
 script:
   - cd $TARGET
   - yarn lint
   - yarn test
   - yarn build
+
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+  skip_cleanup: true
+  app:
+    dev: $APP_NAME
