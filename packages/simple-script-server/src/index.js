@@ -22,12 +22,20 @@ const PORT = process.env.PORT || 3000;
 
 app.set('port', PORT);
 
+let server;
 connectDb().then(async () => {
-  const server = app.listen(app.get('port'), () => {
+  server = app.listen(app.get('port'), () => {
     logger.info(`Express running → PORT ${server.address().port}`);
   });
 }).catch(error => {
   logger.error(`Error connecting to mongo db: ${error.message}, Stack: ${error.stack}`);
+});
+
+process.on('SIGINT', () => {
+  logger.info('Received a kill signal, shutting down the server gracefully.');
+  server.close(() => {
+    logger.info('The server is shut down gracefully');
+  });
 });
 
 export default app;
