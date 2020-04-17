@@ -4,6 +4,7 @@ import cors from 'cors';
 import router from './routes';
 import connectDb from './db';
 import Context from './middlewares/context.middleware';
+import logger from './util/winston';
 
 const app = express();
 
@@ -23,10 +24,10 @@ app.set('port', PORT);
 
 connectDb().then(async () => {
   const server = app.listen(app.get('port'), () => {
-    console.log(`Express running → PORT ${server.address().port}`);
+    logger.info(`Express running → PORT ${server.address().port}`);
   });
 }).catch(error => {
-  console.log(error);
+  logger.error(`Error connecting to mongo db: ${error.message}, Stack: ${error.stack}`);
 });
 
 export default app;

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --require @babel/register 'src/**/*.test.js'",
     "clean": "rm -rf dist",
-    "start-dev": "node dist/index.js ",
+    "start-dev": "nodemon --exec babel-node src/index.js ",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "build-server": "npx babel src -d dist -s",
     "build": "npm run clean && npm run build-server",
@@ -25,7 +25,8 @@
     "jsonwebtoken": "^8.5.1",
     "mocha": "^7.1.1",
     "mongoose": "^5.9.7",
-    "pm2": "^4.2.3"
+    "pm2": "^4.2.3",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
