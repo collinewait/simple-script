@@ -6,6 +6,7 @@ import {
   validateUser,
   verifyUser,
   verifyAdmin,
+  findUser,
 } from '../../../middlewares/user.middleware';
 import { generateToken } from '../../../util/auth.utils';
 import config from '../../../config';
@@ -331,6 +332,65 @@ describe('User middleware', () => {
       await verifyAdmin(mockReq, mockRes, mockNxt);
 
       expect(mockNxt.called).to.be.true();
+    });
+  });
+
+  context('findUser', () => {
+    const mockRequest = () => ({
+      context: {
+        models: {
+          User: {
+            findById: sinon.stub().returns(null),
+          },
+        },
+      },
+      params: {
+        userId: 'some-user-id',
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+    const mockNext = () => sinon.stub().returns({});
+
+    it('should return user not found when the user is not found', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await findUser(mockReq, mockRes, mockNxt);
+      expect(mockRes.status.calledWith(400)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          status: 400,
+          message: 'user not found with id: some-user-id',
+        }),
+      ).to.be.true();
+      expect(mockNxt.calledOnce).to.be.false();
+    });
+
+    it('should add user to the context when the user is found', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          ...mockRequest().context,
+          models: {
+            ...mockRequest().context.models,
+            User: {
+              ...mockRequest().context.models.User,
+              findById: sinon.stub().returns({ _id: 'some-user-with-an-id' }),
+            },
+          },
+        },
+      };
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await findUser(mockReq, mockRes, mockNxt);
+      expect(mockNxt.calledOnce).to.be.true();
     });
   });
 });
