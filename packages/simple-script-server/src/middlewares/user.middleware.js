@@ -4,40 +4,36 @@ import { decodeToken, validateEmail } from '../util/auth.utils';
 // eslint-disable-next-line consistent-return
 export const validateUser = async (req, res, next) => {
   const inValidUserMsg = 'Invalid details, please check your email address or password';
-  try {
-    const {
-      email, firstName, lastName, password,
-    } = req.body;
-    if (
-      !email.trim()
-      || !firstName.trim()
-      || !lastName.trim()
-      || !password.trim()
-    ) {
-      return res.status(401).json({
-        status: 401,
-        message: ' Invalid details, all fields are required',
-      });
-    }
-
-    const validEmail = validateEmail(email);
-    if (!validEmail) {
-      return res.status(401).json({
-        status: 401,
-        message: inValidUserMsg,
-      });
-    }
-    const user = await req.context.models.User.findByEmail(email);
-    if (user) {
-      return res.status(401).json({
-        status: 401,
-        message: inValidUserMsg,
-      });
-    }
-    return next();
-  } catch (error) {
-    res.status(500).send({ error: error.message });
+  const {
+    email, firstName, lastName, password,
+  } = req.body;
+  if (
+    !email.trim()
+    || !firstName.trim()
+    || !lastName.trim()
+    || !password.trim()
+  ) {
+    return res.status(401).json({
+      status: 401,
+      message: 'Invalid details, all fields are required',
+    });
   }
+
+  const validEmail = validateEmail(email);
+  if (!validEmail) {
+    return res.status(401).json({
+      status: 401,
+      message: inValidUserMsg,
+    });
+  }
+  const user = await req.context.models.User.findByEmail(email);
+  if (user) {
+    return res.status(401).json({
+      status: 401,
+      message: inValidUserMsg,
+    });
+  }
+  return next();
 };
 
 export const verifyUser = async (req, res, next) => {
