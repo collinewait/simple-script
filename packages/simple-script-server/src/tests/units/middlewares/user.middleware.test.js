@@ -2,7 +2,9 @@ import sinon from 'sinon';
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 
-import { validateUser } from '../../../middlewares/user.middleware';
+import { validateUser, verifyUser } from '../../../middlewares/user.middleware';
+import { generateToken } from '../../../util/auth.utils';
+import config from '../../../config';
 
 const { expect } = chai;
 
@@ -166,6 +168,110 @@ describe('User middleware', () => {
 
       await validateUser(mockReq, mockRes, mockNxt);
 
+      expect(mockNxt.calledOnce).to.be.true();
+    });
+  });
+
+  context('verifyUser', () => {
+    let sandbox;
+    let token;
+    beforeEach(async () => {
+      sandbox = sinon.createSandbox();
+      sandbox.stub(config, 'SECRET_KEY').value('test-secret-key');
+      sandbox.stub(config, 'expiresIn').value('1hr');
+      token = await generateToken({
+        id: 'some id',
+        email: 'some@email.com',
+      });
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+    const mockRequest = () => ({
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+    const mockNext = () => sinon.stub().returns({});
+
+    it('should return 401 status code when the token is missing', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        headers: {
+          ...mockRequest().headers,
+          authorization: undefined,
+        },
+      };
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyUser(mockReq, mockRes, mockNxt);
+
+      expect(mockRes.status.calledWith(401)).to.be.true();
+      expect(mockNxt.calledOnce).to.be.false();
+    });
+
+    it('should return 401 status code when the token is invalid', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        headers: {
+          ...mockRequest().headers,
+          authorization: 'some-wrong-token',
+        },
+      };
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyUser(mockReq, mockRes, mockNxt);
+
+      expect(mockRes.status.calledWith(401)).to.be.true();
+      expect(mockNxt.calledOnce).to.be.false();
+    });
+
+    it('should return 401 status code when the user is not found', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          models: {
+            User: {
+              findByEmail: sinon.stub().returns(null),
+            },
+          },
+        },
+      };
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyUser(mockReq, mockRes, mockNxt);
+
+      expect(mockRes.status.calledWith(401)).to.be.true();
+      expect(mockNxt.calledOnce).to.be.false();
+    });
+
+    it('should add a logged-in user to the context when the user is verified', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          models: {
+            User: {
+              findByEmail: sinon.stub().returns({ _id: 'some user id' }),
+            },
+          },
+        },
+      };
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyUser(mockReq, mockRes, mockNxt);
+
+      expect(mockReq.context).to.include.keys('loggedIn');
       expect(mockNxt.calledOnce).to.be.true();
     });
   });
