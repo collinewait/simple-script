@@ -2,7 +2,11 @@ import sinon from 'sinon';
 import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 
-import { validateUser, verifyUser } from '../../../middlewares/user.middleware';
+import {
+  validateUser,
+  verifyUser,
+  verifyAdmin,
+} from '../../../middlewares/user.middleware';
 import { generateToken } from '../../../util/auth.utils';
 import config from '../../../config';
 
@@ -273,6 +277,60 @@ describe('User middleware', () => {
 
       expect(mockReq.context).to.include.keys('loggedIn');
       expect(mockNxt.calledOnce).to.be.true();
+    });
+  });
+
+  context('verifyAdmin', () => {
+    const mockRequest = () => ({
+      context: {
+        loggedIn: {
+          isAdmin: false,
+        },
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+    const mockNext = () => sinon.stub().returns({});
+
+    it('should return permission denied if logged-in used is not an admin', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyAdmin(mockReq, mockRes, mockNxt);
+
+      expect(mockRes.status.calledWith(403)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          status: 403,
+          message: 'permission denied',
+        }),
+      ).to.be.true();
+      expect(mockNxt.calledOnce).to.be.false();
+    });
+
+    it('should call the next middleware if the loggedIn user is an admin', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          ...mockRequest().context,
+          loggedIn: {
+            ...mockRequest().context.loggedIn,
+            isAdmin: true,
+          },
+        },
+      };
+
+      const mockRes = mockResponse();
+      const mockNxt = mockNext();
+
+      await verifyAdmin(mockReq, mockRes, mockNxt);
+
+      expect(mockNxt.called).to.be.true();
     });
   });
 });
