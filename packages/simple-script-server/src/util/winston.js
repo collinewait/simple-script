@@ -13,11 +13,13 @@ const logger = createLogger({
       name: 'error-file',
       filename: '.logs/error.log',
       level: 'error',
+      silent: process.env.NODE_ENV === 'test',
     }),
     new transports.File({
       name: 'info-file',
       filename: '.logs/info.log',
       level: 'info',
+      silent: process.env.NODE_ENV === 'test',
     }),
   ],
   exitOnError: false,
