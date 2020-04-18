@@ -18,3 +18,10 @@ It has the following functionalities
     Scripts should be only the above three operations, each on its own line. Don't worry about what the script actually does
 - Users can also "run" the scripts that they have created and save the output. 
 - An admin can create and edit users, and view any scripts that they have created, and the output of any runs of that script.
+
+The app is being monitored with pm2.io as shown below.
+
+
+![Overview of resources](.imgs/monit.png)
+
+![Realtime view of resources usage](.imgs/monit1.png)
