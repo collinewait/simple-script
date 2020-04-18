@@ -31,6 +31,14 @@ connectDb().then(async () => {
   logger.error(`Error connecting to mongo db: ${error.message}, Stack: ${error.stack}`);
 });
 
+process.on('unhandledRejection', error => {
+  logger.error(`Unhandled Promise Rejection: ${500} - ${error.message}, Stack: ${error.stack}`);
+});
+
+process.on('uncaughtException', error => {
+  logger.error(`Uncaught Exception: ${500} - ${error.message}, Stack: ${error.stack}`);
+});
+
 process.on('SIGINT', () => {
   logger.info('Received a kill signal, shutting down the server gracefully.');
   server.close(() => {
