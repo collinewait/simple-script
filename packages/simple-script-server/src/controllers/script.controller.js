@@ -80,10 +80,10 @@ export const createScript = async (req, res) => {
 
   if (operations && operations.length) {
     const script = await generateScript(operations);
-    const newScript = new req.context.models.Script({
+
+    const savedScript = await req.context.models.Script.create({
       script, runResults: [], user: userId,
     });
-    const savedScript = await newScript.save();
 
     res.status(201).json({
       message: 'success',
