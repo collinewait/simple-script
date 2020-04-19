@@ -50,8 +50,10 @@ export const userLogin = async (req, res) => {
     email: user.email,
     isAdmin: user.isAdmin,
   };
-  res.status(200).send({
-    message: 'Success',
+
+  res.status(200).json({
+    message: 'success',
+    status: 200,
     token,
     data,
   });
