@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/collinewait/simple-script.svg?branch=dev)](https://travis-ci.org/collinewait/simple-script)
+
 # Simple script
 
 A simple fictitious app that creates scripts in a fake language.
