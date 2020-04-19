@@ -9,6 +9,7 @@ import {
   getAllScripts,
   getSingleScript,
   updateScript,
+  deleteScript,
 } from '../../../controllers/script.controller';
 
 const { expect } = chai;
@@ -390,6 +391,30 @@ describe('Script controllers', () => {
           },
         }),
       ).to.be.true();
+    });
+  });
+
+  context('deleteScript', () => {
+    const mockRequest = () => ({
+      context: {
+        script: {
+          remove: sinon.stub().returns({}),
+        },
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.sendStatus = sinon.stub().returns(res);
+      return res;
+    };
+
+    it('should return 204 after deleting a script', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await deleteScript(mockReq, mockRes);
+
+      expect(mockRes.sendStatus.calledWith(204)).to.be.true();
     });
   });
 });
