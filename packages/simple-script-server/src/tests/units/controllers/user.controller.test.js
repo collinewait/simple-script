@@ -7,6 +7,7 @@ import {
   userLogin,
   addUser,
   getAllUsers,
+  updateUser,
 } from '../../../controllers/user.controller';
 import * as authUtils from '../../../util/auth.utils';
 
@@ -192,6 +193,40 @@ describe('User controllers', () => {
           message: 'success',
           status: 200,
           data: [user],
+        }),
+      ).to.be.true();
+    });
+  });
+
+  context('UpdateUser', () => {
+    const newFirstName = 'newFirstName';
+    const updatedUser = { ...user, firstName: newFirstName };
+    const mockRequest = () => ({
+      body: {
+        firstName: newFirstName,
+      },
+      context: {
+        user: {
+          ...user,
+          save: sinon.stub().returns(updatedUser),
+        },
+      },
+    });
+
+    it('should return a status code of 200 with an updated user', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await updateUser(mockReq, mockRes);
+
+      const { password, _id: id, ...rest } = updatedUser;
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          message: 'success',
+          status: 200,
+          data: { id, ...rest },
         }),
       ).to.be.true();
     });
