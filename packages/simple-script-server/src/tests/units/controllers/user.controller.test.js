@@ -6,6 +6,7 @@ import {
   userSignUp,
   userLogin,
   addUser,
+  getAllUsers,
 } from '../../../controllers/user.controller';
 import * as authUtils from '../../../util/auth.utils';
 
@@ -154,6 +155,43 @@ describe('User controllers', () => {
             ...returnedUser,
             id,
           },
+        }),
+      ).to.be.true();
+    });
+  });
+
+  context('getAllUsers', () => {
+    const mockRequest = () => ({
+      body: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: user.password,
+      },
+      context: {
+        loggedIn: {
+          userId: user._id,
+        },
+        models: {
+          User: {
+            findUsers: sinon.stub().returns([user]),
+          },
+        },
+      },
+    });
+
+    it('should return a status code of 200 with users', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await getAllUsers(mockReq, mockRes);
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          message: 'success',
+          status: 200,
+          data: [user],
         }),
       ).to.be.true();
     });
