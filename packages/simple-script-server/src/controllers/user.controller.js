@@ -1,24 +1,24 @@
 /* eslint-disable no-underscore-dangle */
-import { generateToken, hashPassword, validateCreds } from '../util/auth.utils';
+import * as authUtils from '../util/auth.utils';
 
 export const userSignUp = async (req, res) => {
   const {
     firstName, lastName, email, password,
   } = req.body;
-  const newPassword = await hashPassword(password);
-  const newUser = new req.context.models.User({
+  const newPassword = await authUtils.hashPassword(password);
+
+  const createdUser = await req.context.models.User.create({
     firstName,
     lastName,
     email,
     password: newPassword,
   });
-  const createdUser = await newUser.save();
 
   const payload = {
     id: createdUser._id,
     email: createdUser.email,
   };
-  const token = await generateToken(payload);
+  const token = await authUtils.generateToken(payload);
   const data = {
     id: createdUser._id,
     firstName: createdUser.firstName,
@@ -37,12 +37,12 @@ export const userSignUp = async (req, res) => {
 export const userLogin = async (req, res) => {
   const { email, password } = req.body;
   const user = await req.context.models.User.findByEmail(email);
-  await validateCreds(user, password);
+  await authUtils.validateCreds(user, password);
   const payload = {
     id: user.id,
     email,
   };
-  const token = await generateToken(payload);
+  const token = await authUtils.generateToken(payload);
   const data = {
     id: user.id,
     firstName: user.firstName,
@@ -61,7 +61,7 @@ export const addUser = async (req, res) => {
   const {
     firstName, lastName, email, password, isAdmin = false,
   } = req.body;
-  const newPassword = await hashPassword(password);
+  const newPassword = await authUtils.hashPassword(password);
   const newUser = new req.context.models.User({
     firstName,
     lastName,
@@ -102,7 +102,7 @@ export const updateUser = async (req, res) => {
     password,
     isAdmin = user.isAdmin,
   } = req.body;
-  const newPassword = password ? await hashPassword(password) : user.password;
+  const newPassword = password ? await authUtils.hashPassword(password) : user.password;
 
   user.firstName = firstName;
   user.lastName = lastName;
