@@ -64,20 +64,22 @@ export const addUser = async (req, res) => {
     firstName, lastName, email, password, isAdmin = false,
   } = req.body;
   const newPassword = await authUtils.hashPassword(password);
-  const newUser = new req.context.models.User({
+
+  const createdUser = await req.context.models.User.create({
     firstName,
     lastName,
     email,
     password: newPassword,
     isAdmin,
   });
-  const createdUser = await newUser.save();
   const data = {
     id: createdUser._id,
     firstName: createdUser.firstName,
     lastName: createdUser.lastName,
     email: createdUser.email,
+    isAdmin: createdUser.isAdmin,
   };
+
   res.status(201).json({
     message: 'success',
     status: 201,
