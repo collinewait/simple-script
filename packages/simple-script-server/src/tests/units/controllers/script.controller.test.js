@@ -3,7 +3,11 @@ import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import { createScript, getAllScripts } from '../../../controllers/script.controller';
+import {
+  createScript,
+  getAllScripts,
+  getSingleScript,
+} from '../../../controllers/script.controller';
 
 const { expect } = chai;
 
@@ -194,6 +198,33 @@ describe('Script controllers', () => {
       await getAllScripts(mockReq, mockRes);
 
       expect(mockRes.status.calledWith(404)).to.be.true();
+    });
+  });
+
+  context('getSingleScript', () => {
+    const mockRequest = () => ({
+      context: {
+        script: {
+          _id: 'script-id',
+          runResults: 'run-results',
+          script: 'some-script',
+        },
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+
+    it('should return 200 when getting a single script', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await getSingleScript(mockReq, mockRes);
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
     });
   });
 });
