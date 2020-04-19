@@ -10,6 +10,7 @@ import {
   getSingleScript,
   updateScript,
   deleteScript,
+  updateScriptOutput,
 } from '../../../controllers/script.controller';
 
 const { expect } = chai;
@@ -415,6 +416,60 @@ describe('Script controllers', () => {
       await deleteScript(mockReq, mockRes);
 
       expect(mockRes.sendStatus.calledWith(204)).to.be.true();
+    });
+  });
+
+  context('updateScriptOutput', () => {
+    const mockRequest = () => ({
+      context: {
+        script: {
+          _id: 'script-id',
+          runResults: 'run-results',
+          script: 'DoThisThing(string)\nDoThatThing(integer)\nDoTheOtherThing(float)',
+          save: sinon.stub().returns({ _id: 'some-script-with-updated-runResults-in-this-object' }),
+        },
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+
+    it('should return 200 after executing the script', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await updateScriptOutput(mockReq, mockRes);
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+    });
+
+    it('should throw an error when the script has an operation with length 1', async () => {
+      const mockReq = {
+        context: {
+          script: {
+            script: '1',
+          },
+        },
+      };
+      const mockRes = mockResponse();
+
+      await expect(updateScriptOutput(mockReq, mockRes)).to.be.rejectedWith('Random Error');
+    });
+
+    it('should throw an error when the script has an invalid operation', async () => {
+      const mockReq = {
+        context: {
+          script: {
+            script: 'this-is-invalid',
+          },
+        },
+      };
+      const mockRes = mockResponse();
+
+      await expect(updateScriptOutput(mockReq, mockRes)).to.be.rejectedWith('Not Valid');
     });
   });
 });
