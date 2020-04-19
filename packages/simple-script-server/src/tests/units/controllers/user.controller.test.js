@@ -8,6 +8,7 @@ import {
   addUser,
   getAllUsers,
   updateUser,
+  getUserWithScripts,
 } from '../../../controllers/user.controller';
 import * as authUtils from '../../../util/auth.utils';
 
@@ -227,6 +228,77 @@ describe('User controllers', () => {
           message: 'success',
           status: 200,
           data: { id, ...rest },
+        }),
+      ).to.be.true();
+    });
+  });
+
+  context('getUserWithScripts', () => {
+    const userScript = {
+      id: 'script-id',
+      script: 'DoThisThing(string)',
+      runResults: [],
+    };
+    const mockRequest = () => ({
+      context: {
+        user,
+        models: {
+          Script: {
+            findByUser: sinon.stub().returns(userScript),
+          },
+        },
+      },
+      params: {
+        userId: user._id,
+      },
+    });
+
+    it('should return users with scripts', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await getUserWithScripts(mockReq, mockRes);
+
+      const {
+        password, _id: id, isAdmin, ...rest
+      } = user;
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          message: 'success',
+          status: 200,
+          data: { user: { id, ...rest }, scripts: userScript },
+        }),
+      ).to.be.true();
+    });
+
+    it('should return users with scripts having an empty object if no scripts found', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          ...mockRequest().context,
+          models: {
+            Script: {
+              findByUser: sinon.stub().returns(null),
+            },
+          },
+        },
+      };
+      const mockRes = mockResponse();
+
+      await getUserWithScripts(mockReq, mockRes);
+
+      const {
+        password, _id: id, isAdmin, ...rest
+      } = user;
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+      expect(
+        mockRes.json.calledWith({
+          message: 'success',
+          status: 200,
+          data: { user: { id, ...rest }, scripts: {} },
         }),
       ).to.be.true();
     });
