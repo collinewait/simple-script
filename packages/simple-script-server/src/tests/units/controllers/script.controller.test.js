@@ -3,7 +3,7 @@ import chai from 'chai';
 import dirtyChai from 'dirty-chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import { createScript } from '../../../controllers/script.controller';
+import { createScript, getAllScripts } from '../../../controllers/script.controller';
 
 const { expect } = chai;
 
@@ -145,6 +145,55 @@ describe('Script controllers', () => {
       const mockRes = mockResponse();
 
       await expect(createScript(mockReq, mockRes)).to.be.rejectedWith(invalidOpsMsg);
+    });
+  });
+
+  context('getAllScripts', () => {
+    const mockRequest = () => ({
+      context: {
+        loggedIn: {
+          userId: 'some-user-id',
+        },
+        models: {
+          Script: {
+            findByUser: sinon.stub().returns({ _id: 'user-scripts-in-this-object' }),
+          },
+        },
+      },
+    });
+    const mockResponse = () => {
+      const res = {};
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+      return res;
+    };
+
+    it('should return user scripts when they are available', async () => {
+      const mockReq = mockRequest();
+      const mockRes = mockResponse();
+
+      await getAllScripts(mockReq, mockRes);
+
+      expect(mockRes.status.calledWith(200)).to.be.true();
+    });
+
+    it('should return 404 when no scripts found', async () => {
+      const mockReq = {
+        ...mockRequest(),
+        context: {
+          ...mockRequest().context,
+          models: {
+            Script: {
+              findByUser: sinon.stub().returns(null),
+            },
+          },
+        },
+      };
+      const mockRes = mockResponse();
+
+      await getAllScripts(mockReq, mockRes);
+
+      expect(mockRes.status.calledWith(404)).to.be.true();
     });
   });
 });

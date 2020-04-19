@@ -106,11 +106,16 @@ export const createScript = async (req, res) => {
 export const getAllScripts = async (req, res) => {
   const { userId } = req.context.loggedIn;
   const scripts = await req.context.models.Script.findByUser(userId);
-  const data = scripts || {};
-  res.status(200).json({
-    message: 'success',
-    status: 200,
-    data,
+  if (scripts) {
+    return res.status(200).json({
+      message: 'success',
+      status: 200,
+      data: scripts,
+    });
+  }
+  return res.status(404).json({
+    status: 404,
+    message: 'no scripts found',
   });
 };
 
