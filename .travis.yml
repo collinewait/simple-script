@@ -9,6 +9,8 @@ matrix:
     - name: "Server Pipeline"
       env: TARGET=packages/simple-script-server APP_NAME=simple-script
 
+services:
+  - mongodb
 script:
   - cd $TARGET
   - yarn lint
