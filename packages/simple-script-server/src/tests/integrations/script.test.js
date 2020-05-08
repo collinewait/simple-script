@@ -101,4 +101,29 @@ describe(SCRIPTS_ROUTE, () => {
       expect(res.body.message).eql('success');
     });
   });
+
+  context(`${SCRIPTS_ROUTE}/:scriptId`, () => {
+    context('GET', () => {
+      it('should return a single script when it exists', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+
+        const res = await request(app)
+          .get(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(200);
+        expect(res.body.message).eql('success');
+      });
+
+      it('should return an error when a script with that id is not found', async () => {
+        const res = await request(app)
+          .get(`${SCRIPTS_ROUTE}/wrongid098hu`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(404);
+        expect(res.body.message).eql('script not found with id: wrongid098hu');
+      });
+    });
+  });
 });
