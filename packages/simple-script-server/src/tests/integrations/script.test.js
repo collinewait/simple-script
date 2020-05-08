@@ -50,6 +50,14 @@ describe(SCRIPTS_ROUTE, () => {
       expect(res.body.message).eql('Duplicates are not allowed');
     });
 
+    it('should return an error when no operations are specified', async () => {
+      const res = await request(app)
+        .post(SCRIPTS_ROUTE)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ operations: [] });
+      expect(res.status).eql(400);
+      expect(res.body.message).eql('request missing operations');
+    });
 
     it('should return an error when an invalid operation is used', async () => {
       const res = await request(app)
