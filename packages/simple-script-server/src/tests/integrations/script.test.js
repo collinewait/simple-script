@@ -164,29 +164,54 @@ describe(SCRIPTS_ROUTE, () => {
         expect(res.status).eql(400);
         expect(res.body.message).eql('request contains invalid operations');
       });
+
+      it('should return an error if a script is sent with any invalid operations', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+
+        const res = await request(app)
+          .put(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ script: 'invalidOpsHere' });
+        expect(res.status).eql(400);
+        expect(res.body.message).eql('request contains invalid operations');
+      });
+
+      it('should return an error if a script with the specified id does not exist', async () => {
+        const res = await request(app)
+          .put(`${SCRIPTS_ROUTE}/fakeIdhere`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ script: 'invalidOpsHere' });
+        expect(res.status).eql(404);
+        expect(res.body.message).eql('script not found with id: fakeIdhere');
+      });
     });
 
-    it('should return an error if a script is sent with any invalid operations', async () => {
-      const createdScript = await request(app)
-        .post(SCRIPTS_ROUTE)
-        .set('Authorization', `Bearer ${token}`)
-        .send({ operations: [operations.doThis] });
+    context('PATCH', () => {
+      it('should return a script with updated runResults', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+        expect(createdScript.body.data.runResults).eql([]);
 
-      const res = await request(app)
-        .put(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
-        .set('Authorization', `Bearer ${token}`)
-        .send({ script: 'invalidOpsHere' });
-      expect(res.status).eql(400);
-      expect(res.body.message).eql('request contains invalid operations');
-    });
+        const res = await request(app)
+          .patch(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(200);
+        expect(res.body.message).eql('success');
+        expect(res.body.data.runResults).eql([19]);
+      });
 
-    it('should return an error if a script with the specified id does not exist', async () => {
-      const res = await request(app)
-        .put(`${SCRIPTS_ROUTE}/fakeIdhere`)
-        .set('Authorization', `Bearer ${token}`)
-        .send({ script: 'invalidOpsHere' });
-      expect(res.status).eql(404);
-      expect(res.body.message).eql('script not found with id: fakeIdhere');
+      it('should return an error if a script with a provided id does not exist', async () => {
+        const res = await request(app)
+          .patch(`${SCRIPTS_ROUTE}/fakeId`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(404);
+        expect(res.body.message).eql('script not found with id: fakeId');
+      });
     });
   });
 });
