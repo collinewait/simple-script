@@ -113,10 +113,6 @@ export const getAllScripts = async (req, res) => {
       data: scripts,
     });
   }
-  return res.status(404).json({
-    status: 404,
-    message: 'no scripts found',
-  });
 };
 
 export const getSingleScript = async (req, res) => {

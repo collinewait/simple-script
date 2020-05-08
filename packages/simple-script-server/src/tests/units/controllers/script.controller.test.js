@@ -184,25 +184,6 @@ describe('Script controllers', () => {
 
       expect(mockRes.status.calledWith(200)).to.be.true();
     });
-
-    it('should return 404 when no scripts found', async () => {
-      const mockReq = {
-        ...mockRequest(),
-        context: {
-          ...mockRequest().context,
-          models: {
-            Script: {
-              findByUser: sinon.stub().returns(null),
-            },
-          },
-        },
-      };
-      const mockRes = mockResponse();
-
-      await getAllScripts(mockReq, mockRes);
-
-      expect(mockRes.status.calledWith(404)).to.be.true();
-    });
   });
 
   context('getSingleScript', () => {

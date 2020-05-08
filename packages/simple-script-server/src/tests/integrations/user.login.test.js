@@ -2,7 +2,7 @@ import chaiHttp from 'chai-http';
 import { use, request, expect } from 'chai';
 import app from '../..';
 import models from '../../models';
-import singleUser from '../seed/user.seed';
+import { singleUser } from '../seed/user.seed';
 
 use(chaiHttp);
 
