@@ -86,4 +86,19 @@ describe(SCRIPTS_ROUTE, () => {
       expect(res.body.message).eql('Invalid credentials, please login');
     });
   });
+
+  context('GET', () => {
+    it('should return all scripts created', async () => {
+      await request(app)
+        .post(SCRIPTS_ROUTE)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ operations: [operations.doThis] });
+
+      const res = await request(app)
+        .get(SCRIPTS_ROUTE)
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.status).eql(200);
+      expect(res.body.message).eql('success');
+    });
+  });
 });
