@@ -213,5 +213,27 @@ describe(SCRIPTS_ROUTE, () => {
         expect(res.body.message).eql('script not found with id: fakeId');
       });
     });
+
+    context('DELETE', () => {
+      it('should return 204 after deleting a script', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+
+        const res = await request(app)
+          .delete(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(204);
+      });
+
+      it('should return an error if a script with a provided id does not exist', async () => {
+        const res = await request(app)
+          .delete(`${SCRIPTS_ROUTE}/fakeId`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(404);
+        expect(res.body.message).eql('script not found with id: fakeId');
+      });
+    });
   });
 });
