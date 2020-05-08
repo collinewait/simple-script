@@ -125,5 +125,60 @@ describe(SCRIPTS_ROUTE, () => {
         expect(res.body.message).eql('script not found with id: wrongid098hu');
       });
     });
+
+
+    context('PUT', () => {
+      it('should return an updated script when a valid script is sent', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+
+        const res = await request(app)
+          .put(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ script: `${operations.doThat}\n${operations.doThis}` });
+        expect(res.status).eql(200);
+        expect(res.body.message).eql('success');
+        expect(res.body.data.script).eql(`${operations.doThat}\n${operations.doThis}`);
+      });
+
+      it('should return an error if no script is sent', async () => {
+        const createdScript = await request(app)
+          .post(SCRIPTS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ operations: [operations.doThis] });
+
+        const res = await request(app)
+          .put(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ script: '' });
+        expect(res.status).eql(400);
+        expect(res.body.message).eql('request contains invalid operations');
+      });
+    });
+
+    it('should return an error if a script is sent with any invalid operations', async () => {
+      const createdScript = await request(app)
+        .post(SCRIPTS_ROUTE)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ operations: [operations.doThis] });
+
+      const res = await request(app)
+        .put(`${SCRIPTS_ROUTE}/${createdScript.body.data.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ script: 'invalidOpsHere' });
+      expect(res.status).eql(400);
+      expect(res.body.message).eql('request contains invalid operations');
+    });
+
+    it('should return an error if a script with the specified id does not exist', async () => {
+      const res = await request(app)
+        .put(`${SCRIPTS_ROUTE}/fakeIdhere`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ script: 'invalidOpsHere' });
+      expect(res.status).eql(404);
+      expect(res.body.message).eql('script not found with id: fakeIdhere');
+    });
   });
 });
