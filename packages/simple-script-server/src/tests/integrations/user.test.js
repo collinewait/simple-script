@@ -33,4 +33,20 @@ describe(USERS_ROUTE, () => {
       expect(res.body.data.isAdmin).eql(false);
     });
   });
+
+  context('GET', () => {
+    it('should be able to return all users', async () => {
+      await request(app)
+        .post(USERS_ROUTE)
+        .set('Authorization', `Bearer ${token}`)
+        .send(singleUser);
+
+      const res = await request(app)
+        .get(USERS_ROUTE)
+        .set('Authorization', `Bearer ${token}`);
+      expect(res.status).eql(200);
+      expect(res.body.message).eql('success');
+      expect(res.body.data.length).eql(1);
+    });
+  });
 });
