@@ -14,7 +14,7 @@ services:
 script:
   - cd $TARGET
   - yarn lint
-  - yarn test
+  - yarn coverage
   - yarn build
 
 deploy:
