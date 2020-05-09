@@ -19,6 +19,11 @@ And then run the following commands.
 - Run `yarn install` to install dependencies
 - Run `yarn start` to start the application
 
+### Run tests
+  
+- Run `yarn test` to run tests
+- Run `yarn coverage` to run tests with code coverage
+
 ### API Endpoints
 
 - POST /api/auth/signup  - user can sign up
