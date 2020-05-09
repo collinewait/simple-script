@@ -49,4 +49,22 @@ describe(USERS_ROUTE, () => {
       expect(res.body.data.length).eql(1);
     });
   });
+
+  context(`${USERS_ROUTE}/:userId`, () => {
+    context('GET', () => {
+      it('should return a single user with scripts', async () => {
+        const createdUser = await request(app)
+          .post(USERS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send(singleUser);
+
+        const res = await request(app)
+          .get(`${USERS_ROUTE}/${createdUser.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).eql(200);
+        expect(res.body.message).eql('success');
+        expect(res.body.data).to.include.keys('user', 'scripts');
+      });
+    });
+  });
 });
