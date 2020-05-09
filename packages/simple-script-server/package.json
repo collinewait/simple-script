@@ -5,7 +5,9 @@
   "main": "index.js",
   "nyc": {
     "exclude": [
-      "src/index.js"
+      "src/index.js",
+      "src/tests",
+      "src/config"
     ]
   },
   "scripts": {
