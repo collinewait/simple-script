@@ -66,5 +66,23 @@ describe(USERS_ROUTE, () => {
         expect(res.body.data).to.include.keys('user', 'scripts');
       });
     });
+
+    context('PUT', () => {
+      it('should return an updated user', async () => {
+        const createdUser = await request(app)
+          .post(USERS_ROUTE)
+          .set('Authorization', `Bearer ${token}`)
+          .send(singleUser);
+        expect(createdUser.body.data.firstName).eql(singleUser.firstName);
+
+        const res = await request(app)
+          .put(`${USERS_ROUTE}/${createdUser.body.data.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .send({ firstName: 'updatedName' });
+        expect(res.status).eql(200);
+        expect(res.body.message).eql('success');
+        expect(res.body.data.firstName).eql('updatedName');
+      });
+    });
   });
 });
