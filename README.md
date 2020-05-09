@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/collinewait/simple-script.svg?branch=dev)](https://travis-ci.org/collinewait/simple-script)
+[![Build Status](https://travis-ci.org/collinewait/simple-script.svg?branch=dev)](https://travis-ci.org/collinewait/simple-script) [![Coverage Status](https://coveralls.io/repos/github/collinewait/simple-script/badge.svg?branch=dev)](https://coveralls.io/github/collinewait/simple-script?branch=dev)
 
 # Simple script
 
