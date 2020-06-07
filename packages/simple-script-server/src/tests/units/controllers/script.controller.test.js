@@ -216,7 +216,7 @@ describe('Script controllers', () => {
   context('updateScript', () => {
     const mockRequest = () => ({
       body: {
-        script: '',
+        operations: [],
       },
     });
     const mockResponse = () => {
@@ -226,32 +226,32 @@ describe('Script controllers', () => {
       return res;
     };
 
-    it('should throw an error when the script is empty', async () => {
+    it('should throw an error when no operations sent', async () => {
       const mockReq = mockRequest();
       const mockRes = mockResponse();
 
-      await expect(updateScript(mockReq, mockRes)).to.be.rejectedWith(invalidOpsMsg);
+      await expect(updateScript(mockReq, mockRes)).to.be.rejectedWith('request missing operations');
     });
 
-    it('should throw an error when the script is not defined', async () => {
+    it('should throw an error when operations are not defined', async () => {
       const mockReq = {
         ...mockRequest(),
         body: {
           ...mockRequest().body,
-          script: null,
+          operations: null,
         },
       };
       const mockRes = mockResponse();
 
-      await expect(updateScript(mockReq, mockRes)).to.be.rejectedWith(invalidOpsMsg);
+      await expect(updateScript(mockReq, mockRes)).to.be.rejectedWith('request missing operations');
     });
 
-    it('should throw an error when the script is defined but invalid', async () => {
+    it('should throw an error when an operation is invalid', async () => {
       const mockReq = {
         ...mockRequest(),
         body: {
           ...mockRequest().body,
-          script: 'some-invalid-script',
+          operations: ['some-invalid-script'],
         },
       };
       const mockRes = mockResponse();
@@ -270,7 +270,7 @@ describe('Script controllers', () => {
         ...mockRequest(),
         body: {
           ...mockRequest().body,
-          script: updatingScript,
+          operations: ['DoThisThing(string)', 'DoThisThing(string)'],
         },
         context: {
           script: {
@@ -308,7 +308,7 @@ describe('Script controllers', () => {
         ...mockRequest(),
         body: {
           ...mockRequest().body,
-          script: updatingScript,
+          operations: ['DoThisThing(string)'],
         },
         context: {
           script: {
@@ -345,7 +345,7 @@ describe('Script controllers', () => {
         ...mockRequest(),
         body: {
           ...mockRequest().body,
-          script: updatingScript,
+          operations: ['DoThisThing(string)', 'DoThisThing(string)'],
         },
         context: {
           script: {

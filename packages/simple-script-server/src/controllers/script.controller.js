@@ -41,15 +41,6 @@ const generateScript = async operations => {
   return script;
 };
 
-const verifyScript = async script => {
-  if (!script || !script.length) {
-    return false;
-  }
-  const lines = script.split('\n');
-  const isInvalid = lines.some(line => !(validOperations.hasOwnProperty(line)));
-  return !isInvalid;
-};
-
 const executeScript = async scriptStr => {
   const output = [];
   const lines = scriptStr.split('\n');
@@ -128,11 +119,12 @@ export const getSingleScript = async (req, res) => {
 };
 
 export const updateScript = async (req, res) => {
-  const isValid = await verifyScript(req.body.script);
-  if (isValid) {
+  const { operations } = req.body;
+  if (operations && operations.length) {
+    const newScript = await generateScript(operations);
     const { script } = req.context;
-    const runResults = script.script === req.body.script ? script.runResults : [];
-    script.script = req.body.script;
+    const runResults = script.script === newScript ? script.runResults : [];
+    script.script = newScript;
     script.runResults = runResults;
     const updatedScript = await script.save();
     res.status(200).json({
@@ -145,7 +137,11 @@ export const updateScript = async (req, res) => {
       },
     });
   } else {
-    throw invalidOps;
+    const missingOps = {
+      status: 400,
+      message: 'request missing operations',
+    };
+    throw missingOps;
   }
 };
 
