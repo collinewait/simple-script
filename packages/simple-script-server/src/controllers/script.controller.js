@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */ // Rule disable object has hardcoded keys
 /* eslint-disable no-underscore-dangle */
 
 const validOperations = {
@@ -14,7 +15,7 @@ const invalidOps = {
 const generateScript = async operations => {
   const len = operations.length;
   if (len === 1) {
-    if (operations[0] in validOperations) {
+    if (validOperations.hasOwnProperty(operations[0])) {
       return `${operations[0]}`;
     }
     throw invalidOps;
@@ -23,7 +24,7 @@ const generateScript = async operations => {
   let script = '';
   let i;
   for (i = 0; i < len - 1; i += 1) {
-    if (operations[i] in validOperations) {
+    if (validOperations.hasOwnProperty(operations[i])) {
       script = `${script}${operations[i]}\n`;
     } else {
       throw invalidOps;
@@ -31,7 +32,7 @@ const generateScript = async operations => {
   }
 
   const lastOperation = operations[len - 1];
-  if (lastOperation in validOperations) {
+  if (validOperations.hasOwnProperty(lastOperation)) {
     script = `${script}${lastOperation}`;
   } else {
     throw invalidOps;
@@ -45,7 +46,7 @@ const verifyScript = async script => {
     return false;
   }
   const lines = script.split('\n');
-  const isInvalid = lines.some(line => !(line in validOperations));
+  const isInvalid = lines.some(line => !(validOperations.hasOwnProperty(line)));
   return !isInvalid;
 };
 

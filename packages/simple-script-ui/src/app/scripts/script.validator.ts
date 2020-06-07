@@ -3,7 +3,7 @@ import { AbstractControl } from '@angular/forms';
 const validOperations = {
   'DoThisThing(string)': 1,
   'DoThatThing(integer)': 2,
-  'DoTheOtherThing(float)': 3,
+  'DoTheOtherThing(float)': 3
 };
 
 export const InvalidOps = (control: AbstractControl) => {
@@ -11,7 +11,7 @@ export const InvalidOps = (control: AbstractControl) => {
     return null;
   }
   const operations = control.value.split(',');
-  const invalid = operations.some((operation: string) => !(operation.trim() in validOperations));
+  const invalid = operations.some((operation: string) => !validOperations.hasOwnProperty(operation.trim()));
   return invalid ? { invalidOps: true } : null;
 };
 
@@ -20,6 +20,6 @@ export const InvalidScript = (control: AbstractControl) => {
     return null;
   }
   const operations = control.value.split('\\n');
-  const invalid = operations.some((operation: string) => !(operation.trim() in validOperations));
+  const invalid = operations.some((operation: string) => !validOperations.hasOwnProperty(operation.trim()));
   return invalid ? { invalidScript: true } : null;
 };
