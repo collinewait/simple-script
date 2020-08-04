@@ -3,7 +3,7 @@
 # Simple script
 
 A simple fictitious app that creates scripts in a fake language.
-Here is the [demo](https://drive.google.com/file/d/10LUDDOuGjh4KeUAI_eN3jQSbX8FLT_xx/view?usp=sharing) and a  [live](https://pensive-swartz-30859c.netlify.com) application. A grpc version with java can be found [here](https://github.com/collinewait/simple-script-grpc)
+Here is the [demo](https://drive.google.com/file/d/10LUDDOuGjh4KeUAI_eN3jQSbX8FLT_xx/view?usp=sharing). A grpc version with java can be found [here](https://github.com/collinewait/simple-script-grpc)
 
 
 It was a coding challenge that required building a backend in node and a frontend in angular.
